@@ -1,0 +1,4336 @@
+{
+  "info": {
+    "_postman_id": "3ac561e5-c572-41b7-ad9a-110c4ad8bb94",
+    "name": "WebTutoria - Completo",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "12786839"
+  },
+  "item": [
+    {
+      "name": "Autenticação do Usuário",
+      "item": [
+        {
+          "name": "Log in com E-mail Inválido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// 1. Valida o Status Code 404 (retornado pelo backend em caso de erro)\npm.test(\"Status code é 404 Not Found\", function () {\n    pm.response.to.have.status(404);\n});\n\n// 2. Valida a mensagem exata de erro retornada\npm.test(\"Retorna mensagem de credenciais inválidas\", function () {\n    var jsonData = pm.response.json();\n    pm.expect(jsonData.mensagem).to.eql(\"Credenciais inválidas\");\n});\n\n// 3. Garante que NENHUM cookie de autenticação foi gerado na falha\npm.test(\"Nenhum cookie de sessão foi definido\", function () {\n    const ExtractFromCookie = name => pm.cookies.map(cookie => cookie.name === name ? cookie.value : null).filter(Boolean);\n\n    const access_token = ExtractFromCookie(\"access_token\")[0];\n    const refresh_token = ExtractFromCookie(\"refresh_token\")[0];\n\n    if (access_token === null && refresh_token === null) {\n        pm.expect(access_token).to.be.null;\n        pm.expect(refresh_token).to.be.null;\n    }\n    else {\n        pm.expect(access_token).to.be.equal(\"%22%22\");\n        pm.expect(refresh_token).to.be.equal(\"%22%22\");\n    }\n});"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const logout = eval(pm.collectionVariables.get(\"Logout\"));\r\nlogout();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"admin.errado@tutoria.com\",\r\n    \"password\": \"admin123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/login",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Log in com Senha Inválida",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// 1. Valida o Status Code 404 (retornado pelo backend em caso de erro)\npm.test(\"Status code é 404 Not Found\", function () {\n    pm.response.to.have.status(404);\n});\n\n// 2. Valida a mensagem exata de erro retornada\npm.test(\"Retorna mensagem de credenciais inválidas\", function () {\n    var jsonData = pm.response.json();\n    pm.expect(jsonData.mensagem).to.eql(\"Credenciais inválidas\");\n});\n\n// 3. Garante que NENHUM cookie de autenticação foi gerado na falha\npm.test(\"Nenhum cookie de sessão foi definido\", function () {\n    const ExtractFromCookie = name => pm.cookies.map(cookie => cookie.name === name ? cookie.value : null).filter(Boolean);\n\n    const access_token = ExtractFromCookie(\"access_token\")[0];\n    const refresh_token = ExtractFromCookie(\"refresh_token\")[0];\n\n    if (access_token === null && refresh_token === null) {\n        pm.expect(access_token).to.be.null;\n        pm.expect(refresh_token).to.be.null;\n    }\n    else {\n        pm.expect(access_token).to.be.equal(\"%22%22\");\n        pm.expect(refresh_token).to.be.equal(\"%22%22\");\n    }\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"admin@tutoria.com\",\r\n    \"password\": \"minhamegasenha123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/login",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Log in com Sucesso",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// 1. Valida o Status Code\npm.test(\"Status code é 200 OK\", function () {\n    pm.response.to.have.status(200);\n});\n\n// 2. Valida a mensagem no JSON de resposta\npm.test(\"Retorna mensagem de sucesso\", function () {\n    var jsonData = pm.response.json();\n    pm.expect(jsonData.mensagem).to.eql(\"Login com sucesso\");\n});\n\n// 3. Valida se os Cookies de autenticação foram definidos\npm.test(\"Cookie access_token foi definido\", function () {\n    pm.expect(pm.cookies.has(\"access_token\")).to.be.true;\n});\n\npm.test(\"Cookie refresh_token foi definido\", function () {\n    pm.expect(pm.cookies.has(\"refresh_token\")).to.be.true;\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"admin@tutoria.com\",\r\n    \"password\": \"admin123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/login",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Log in Refresh com Sucesso",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// 1. Valida o Status Code\npm.test(\"Status code é 200 OK\", function () {\n    pm.response.to.have.status(200);\n});\n\n// 2. Valida a mensagem no JSON de resposta\npm.test(\"Retorna mensagem de sucesso\", function () {\n    var jsonData = pm.response.json();\n    pm.expect(jsonData.mensagem).to.eql(\"Token renovado com sucesso\");\n});\n\n// 3. Valida se os Cookies de autenticação foram definidos\npm.test(\"Cookie access_token foi definido\", function () {\n    \n    const ExtractFromCookie = name => pm.cookies.map(cookie => cookie.name === name ? cookie.value : null).filter(Boolean);\n\n    const access_token = ExtractFromCookie(\"access_token\")[0];\n\n    pm.expect(access_token).to.be.not.equal(\"%22%22\");\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{WebTutoriaURL}}/login/refresh",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "login",
+                "refresh"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Log out",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// 1. Valida o Status Code 200 OK\npm.test(\"Status code é 200 OK\", function () {\n    pm.response.to.have.status(200);\n});\n\n// 2. Valida a mensagem de sucesso retornada\npm.test(\"Retorna mensagem de sucesso esperada\", function () {\n    var jsonData = pm.response.json();\n    pm.expect(jsonData.mensagem).to.eql(\"Logout realizado com sucesso\");\n});\n\n// 3. Garante que os cookies de autenticação foram apagados\npm.test(\"Nenhum cookie de sessão foi definido\", function () {\n    const ExtractFromCookie = name => pm.cookies.map(cookie => cookie.name === name ? cookie.value : null).filter(Boolean);\n\n    const access_token = ExtractFromCookie(\"access_token\")[0];\n    const refresh_token = ExtractFromCookie(\"refresh_token\")[0];\n\n    if (access_token === null && refresh_token === null) {\n        pm.expect(access_token).to.be.null;\n        pm.expect(refresh_token).to.be.null;\n    }\n    else {\n        pm.expect(access_token).to.be.equal(\"%22%22\");\n        pm.expect(refresh_token).to.be.equal(\"%22%22\");\n    }\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{WebTutoriaURL}}/logout",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Log in Refresh com Erro",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// 1. Valida o Status Code\npm.test(\"Status code é 401 Unauthorized\", function () {\n    pm.response.to.have.status(401);\n});\n\n// 2. Valida a mensagem de erro de resposta\npm.test(\"Retorna mensagem de sucesso\", function () {\n    var jsonData = pm.response.json();\n    pm.expect(jsonData.mensagem).to.eql(\"Não foi possível encontrar Token de Autenticação\");\n});\n\n// 3. Valida se o token de acesso não foi gerado\npm.test(\"Cookie access_token foi definido\", function () {\n    const ExtractFromCookie = name => pm.cookies.map(cookie => cookie.name === name ? cookie.value : null).filter(Boolean);\n\n    const access_token = ExtractFromCookie(\"access_token\")[0];\n    const refresh_token = ExtractFromCookie(\"refresh_token\")[0];\n\n    if (access_token === null && refresh_token === null) {\n        pm.expect(access_token).to.be.null;\n        pm.expect(refresh_token).to.be.null;\n    }\n    else {\n        pm.expect(access_token).to.be.equal(\"%22%22\");\n        pm.expect(refresh_token).to.be.equal(\"%22%22\");\n    }\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{WebTutoriaURL}}/login/refresh",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "login",
+                "refresh"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pedido de Reset de Senha",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// 1. Valida o Status Code\npm.test(\"Status code é 200 OK\", function () {\n    pm.response.to.have.status(200);\n});\n\n// 2. Valida a mensagem no JSON de resposta\npm.test(\"Retorna mensagem de sucesso\", function () {\n    var jsonData = pm.response.json();\n    pm.expect(jsonData.mensagem).to.eql(\"Se este e-mail estiver cadastrado, um link será enviado para a recuperação de sua senha.\");\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"webapp.tutoria+teste22@gmail.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/reset-password/request",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "reset-password",
+                "request"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset de Senha com Sucesso",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// 1. Valida o Status Code 200 OK\npm.test(\"Status code é 200 OK\", function () {\n    pm.response.to.have.status(200);\n});\n\n// 2. Valida a mensagem exata de erro retornada\npm.test(\"Retorna mensagem de credenciais inválidas\", function () {\n    var jsonData = pm.response.json();\n    pm.expect(jsonData.mensagem).to.eql(\"Senha alterada com sucesso!\");\n});"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"uid\": \"MjM\",\r\n    \"token\": \"dgjr1b-34bffa4b53f1482813489daef3b23fd1⁠⁠\",\r\n    \"new_password\": \"Senha@l7erada\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/reset-password/confirm",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "reset-password",
+                "confirm"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset de Senha com Erro",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// 1. Valida o Status Code 400",
+                  "pm.test(\"Status code é 400 Bad Request\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "// 2. Valida a mensagem exata de erro retornada",
+                  "pm.test(\"Retorna mensagem de credenciais inválidas\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.mensagem).to.eql(\"Link inválido ou expirado\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"uid\": \"SouUmErro\",\r\n    \"token\": \"d5nzv3-ffc71740e2f39dcccb842955a4bfc566\",\r\n    \"new_password\": \"Lucas@123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/reset-password/confirm",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "reset-password",
+                "confirm"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Usuário",
+      "item": [
+        {
+          "name": "Cadastrar Usuário",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validando o status 201 Created\npm.test(\"Status code é 201 Created\", function () {\n    pm.response.to.have.status(201);\n});\n\n\npm.test(\"Valida todos os campos da resposta\", function () {\n    var jsonData = pm.response.json();\n\n    pm.expect(jsonData).to.have.property(\"email\");\n    pm.expect(jsonData).to.have.property(\"nomePerfil\");\n    pm.expect(jsonData).to.have.property(\"estado\");\n    pm.expect(jsonData).to.have.property(\"cidade\");\n    pm.expect(jsonData).to.have.property(\"aniversario\");\n    pm.expect(jsonData).to.have.property(\"sobremim\");\n\n    pm.expect(jsonData.email).to.be.a(\"string\");\n    pm.expect(jsonData.nomePerfil).to.be.a(\"string\");\n    pm.expect(jsonData.estado).to.be.a(\"string\");\n    pm.expect(jsonData.cidade).to.be.a(\"string\");\n    pm.expect(jsonData.aniversario).to.be.a(\"string\");\n    if (jsonData.sobremim !== null) pm.expect(jsonData.sobremim).to.be.a(\"string\");\n});"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const logout = eval(pm.collectionVariables.get(\"Logout\"));\r\nlogout();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "exemplo@gmail.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "Exemplo@91939",
+                  "type": "text"
+                },
+                {
+                  "key": "nomePerfil",
+                  "value": "Teste",
+                  "type": "text"
+                },
+                {
+                  "key": "estado",
+                  "value": "DF",
+                  "type": "text"
+                },
+                {
+                  "key": "cidade",
+                  "value": "Brasília",
+                  "type": "text"
+                },
+                {
+                  "key": "aniversario",
+                  "value": "2000-04-19",
+                  "type": "text"
+                },
+                {
+                  "key": "especialidades",
+                  "value": "1",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "especialidades",
+                  "value": "2",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "foto",
+                  "type": "file",
+                  "src": [
+                    "/C:/Users/ro_di/OneDrive/Imagens/canvas4.png"
+                  ]
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/usuarios/novo",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "usuarios",
+                "novo"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cadastrar Usuário com Conta já criada",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// 1. Valida se o status HTTP é 400 Bad Request\npm.test(\"Status code é 400 Bad Request\", function () {\n    pm.response.to.have.status(400);\n});\n\n// 2. Valida a mensagem de erro do campo senhaAntiga\npm.test(\"Retorna mensagem de erro para senha antiga incorreta\", function () {\n    var jsonData = pm.response.json();\n    \n    var mensagem = jsonData.message;\n    \n    pm.expect(mensagem).to.eql(\"Já existe uma conta cadastrada com esse e-mail!\");\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "exemplo@gmail.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "Exempli123456$",
+                  "type": "text"
+                },
+                {
+                  "key": "nomePerfil",
+                  "value": "Teste",
+                  "type": "text"
+                },
+                {
+                  "key": "estado",
+                  "value": "DF",
+                  "type": "text"
+                },
+                {
+                  "key": "cidade",
+                  "value": "Brasília",
+                  "type": "text"
+                },
+                {
+                  "key": "aniversario",
+                  "value": "2000-04-19",
+                  "type": "text"
+                },
+                {
+                  "key": "especialidades",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "especialidades",
+                  "value": "2",
+                  "type": "text"
+                },
+                {
+                  "key": "foto",
+                  "type": "file",
+                  "src": [
+                    "/C:/Users/ro_di/OneDrive/Imagens/canvas4.png"
+                  ]
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/usuarios/novo",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "usuarios",
+                "novo"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Estatísticas do Usuário",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "//Validando o status 200\npm.test(\"Status code é 200 OK\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Estrutura e tipos de dados do dashboard do usuário são válidos\", function () {\n    var jsonData = pm.response.json();\n\n    // Validando existência dos campos\n    pm.expect(jsonData).to.have.all.keys(\"usuarioId\", \"sessoesConcluidas\", \"conquistasDesbloqueadas\", \"pontos\");\n\n    // Validando se os tipos de dados são numéricos\n    pm.expect(jsonData.usuarioId).to.be.a(\"number\");\n    pm.expect(jsonData.sessoesConcluidas).to.be.a(\"number\");\n    pm.expect(jsonData.conquistasDesbloqueadas).to.be.a(\"number\");\n    pm.expect(jsonData.pontos).to.be.a(\"number\");\n\n    // Regras de negócio genéricas (não dependem de valor fixo)\n    pm.expect(jsonData.sessoesConcluidas).to.be.at.least(0);\n    pm.expect(jsonData.conquistasDesbloqueadas).to.be.at.least(0);\n    pm.expect(jsonData.pontos).to.be.at.least(0);\n});"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const login = eval(pm.collectionVariables.get(\"Login\"));\r\nlogin();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{WebTutoriaURL}}/estatistica",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "estatistica"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Informações sobre Perfil Logado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "//Validando o status 200 OK",
+                  "pm.test(\"Status code é 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Valida todos os campos do perfil do usuário\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    // 1. Valida se a resposta contém exatamente todas as propriedades esperadas no raiz",
+                  "    pm.expect(jsonData).to.have.property(\"id\");",
+                  "    pm.expect(jsonData).to.have.property(\"email\");",
+                  "    pm.expect(jsonData).to.have.property(\"nomePerfil\");",
+                  "    pm.expect(jsonData).to.have.property(\"estado\");",
+                  "    pm.expect(jsonData).to.have.property(\"cidade\");",
+                  "    pm.expect(jsonData).to.have.property(\"aniversario\");",
+                  "    pm.expect(jsonData).to.have.property(\"pontuacao\");",
+                  "    pm.expect(jsonData).to.have.property(\"fotoURL\");",
+                  "    pm.expect(jsonData).to.have.property(\"sobremim\");",
+                  "    pm.expect(jsonData).to.have.property(\"notaAvaliacao\");",
+                  "    pm.expect(jsonData).to.have.property(\"totalAvaliacoes\");",
+                  "    pm.expect(jsonData).to.have.property(\"perfilTutor\");",
+                  "",
+                  "    // 2. Valida o tipo de dado de cada campo do usuário",
+                  "    pm.expect(jsonData.id).to.be.a(\"number\");",
+                  "    pm.expect(jsonData.email).to.be.a(\"string\");",
+                  "    pm.expect(jsonData.nomePerfil).to.be.a(\"string\");",
+                  "    pm.expect(jsonData.estado).to.be.a(\"string\");",
+                  "    pm.expect(jsonData.cidade).to.be.a(\"string\");",
+                  "    pm.expect(jsonData.aniversario).to.be.a(\"string\");",
+                  "",
+                  "    if (jsonData.fotoURL !== null) pm.expect(jsonData.fotoURL).to.be.a(\"string\");",
+                  "    if (jsonData.sobremim !== null) pm.expect(jsonData.sobremim).to.be.a(\"string\");",
+                  "    pm.expect(jsonData.pontuacao).to.be.a(\"number\");",
+                  "    pm.expect(jsonData.notaAvaliacao).to.be.a(\"number\");",
+                  "    pm.expect(jsonData.totalAvaliacoes).to.be.a(\"number\");",
+                  "});",
+                  "",
+                  "pm.test(\"Valida a estrutura do perfilTutor e seus campos internos\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    if (jsonData.perfilTutor === null) {",
+                  "        // Aprendiz",
+                  "        pm.expect(jsonData.perfilTutor).to.be.null;",
+                  "    } else {",
+                  "        // Tutor",
+                  "        var tutor = jsonData.perfilTutor;",
+                  "",
+                  "        pm.expect(tutor).to.have.property(\"id\");",
+                  "        pm.expect(tutor).to.have.property(\"especialidades\");",
+                  "        pm.expect(tutor).to.have.property(\"areas\");",
+                  "        pm.expect(tutor).to.have.property(\"notaAvaliacao\");",
+                  "        pm.expect(tutor).to.have.property(\"totalAvaliacoes\");",
+                  "",
+                  "        pm.expect(tutor.id).to.be.a(\"number\");",
+                  "        pm.expect(tutor.especialidades).to.be.an(\"array\");",
+                  "        pm.expect(tutor.areas).to.be.an(\"array\");",
+                  "        pm.expect(tutor.notaAvaliacao).to.be.a(\"number\");",
+                  "        pm.expect(tutor.totalAvaliacoes).to.be.a(\"number\");",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{WebTutoriaURL}}/perfil",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "perfil"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Alteração de Informações do Perfil Logado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Verifica status 200 ",
+                  "pm.test(\"Status code é 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "//Validando alteração",
+                  "pm.test(\"Valida se o campo alterado no body foi atualizado na resposta\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    ",
+                  "    if (pm.request.body.raw) {",
+                  "        var requestBody = JSON.parse(pm.request.body.raw);",
+                  "        ",
+                  "        if (requestBody.nomePerfil) {",
+                  "            pm.expect(jsonData.nomePerfil).to.eql(requestBody.nomePerfil);",
+                  "        }",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"Valida a resposta do PATCH\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    pm.expect(jsonData).to.have.property(\"id\").that.is.a(\"number\");",
+                  "    pm.expect(jsonData).to.have.property(\"email\").that.is.a(\"string\");",
+                  "    pm.expect(jsonData).to.have.property(\"nomePerfil\").that.is.a(\"string\");",
+                  "    pm.expect(jsonData).to.have.property(\"pontuacao\").that.is.a(\"number\");",
+                  "    pm.expect(jsonData).to.have.property(\"notaAvaliacao\").that.is.a(\"number\");",
+                  "    pm.expect(jsonData).to.have.property(\"totalAvaliacoes\").that.is.a(\"number\");",
+                  "    ",
+                  "    pm.expect(jsonData).to.have.property(\"estado\");",
+                  "    pm.expect(jsonData).to.have.property(\"cidade\");",
+                  "    pm.expect(jsonData).to.have.property(\"aniversario\");",
+                  "    pm.expect(jsonData).to.have.property(\"fotoURL\");",
+                  "    pm.expect(jsonData).to.have.property(\"sobremim\");",
+                  "    pm.expect(jsonData).to.have.property(\"perfilTutor\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/perfil",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "perfil"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lista Usuarios",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// 1. Valida se o status é 200",
+                  "pm.test(\"Status code é 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// 2. Valida se o retorno é um Array e se contém elementos",
+                  "pm.test(\"A resposta é um Array de usuários\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    ",
+                  "    var lista = Array.isArray(jsonData) ? jsonData : jsonData.results;",
+                  "    ",
+                  "    pm.expect(lista).to.be.an(\"array\");",
+                  "    pm.expect(lista.length).to.be.above(0);",
+                  "});",
+                  "",
+                  "// Valida a quantidade de registros do Popula inicial (30 usuários)",
+                  "pm.test(\"Retorna a quantidade esperada de usuários do banco\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var lista = Array.isArray(jsonData) ? jsonData : jsonData.results;",
+                  "    ",
+                  "    pm.expect(lista.length).to.be.at.least(30);",
+                  "});",
+                  "",
+                  "// Valida a estrutura de um item da lista",
+                  "pm.test(\"Os itens da lista contêm a estrutura de campos esperada\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var lista = Array.isArray(jsonData) ? jsonData : jsonData.results;",
+                  "    var primeiroUsuario = lista[0];",
+                  "",
+                  "    // Verifica a presença dos atributos",
+                  "    pm.expect(primeiroUsuario).to.have.property(\"id\");",
+                  "    pm.expect(primeiroUsuario).to.have.property(\"nomePerfil\");",
+                  "    pm.expect(primeiroUsuario).to.have.property(\"estado\");",
+                  "    pm.expect(primeiroUsuario).to.have.property(\"cidade\");",
+                  "    pm.expect(primeiroUsuario).to.have.property(\"pontuacao\");",
+                  "    pm.expect(primeiroUsuario).to.have.property(\"fotoURL\");",
+                  "    pm.expect(primeiroUsuario).to.have.property(\"sobremim\");",
+                  "    pm.expect(primeiroUsuario).to.have.property(\"notaAvaliacao\");",
+                  "    pm.expect(primeiroUsuario).to.have.property(\"totalAvaliacoes\");",
+                  "    pm.expect(primeiroUsuario).to.have.property(\"tutorId\");",
+                  "",
+                  "    // Valida os tipos de dados fundamentais",
+                  "    pm.expect(primeiroUsuario.id).to.be.a(\"number\");",
+                  "    pm.expect(primeiroUsuario.nomePerfil).to.be.a(\"string\");",
+                  "    pm.expect(primeiroUsuario.estado).to.be.a(\"string\");",
+                  "    pm.expect(primeiroUsuario.cidade).to.be.a(\"string\");",
+                  "    pm.expect(primeiroUsuario.pontuacao).to.be.a(\"number\");",
+                  "    ",
+                  "    if (primeiroUsuario.fotoURL !== null) pm.expect(primeiroUsuario.fotoURL).to.be.a(\"string\");",
+                  "    if (primeiroUsuario.sobremim !== null) pm.expect(primeiroUsuario.sobremim).to.be.a(\"string\");",
+                  "    ",
+                  "    pm.expect(primeiroUsuario.notaAvaliacao).to.be.a(\"number\");",
+                  "    pm.expect(primeiroUsuario.totalAvaliacoes).to.be.a(\"number\");",
+                  "    ",
+                  "    if (primeiroUsuario.tutorId !== null) pm.expect(primeiroUsuario.tutorId).to.be.a(\"number\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{WebTutoriaURL}}/usuarios",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Informações de Usuário Específico",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Validando o status 200 OK",
+                  "pm.test(\"Status code é 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Valida todos os campos do perfil do usuário\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    // 1. Valida se a resposta contém exatamente todas as propriedades esperadas no raiz",
+                  "    pm.expect(jsonData).to.have.property(\"id\");",
+                  "    pm.expect(jsonData).to.have.property(\"nomePerfil\");",
+                  "    pm.expect(jsonData).to.have.property(\"estado\");",
+                  "    pm.expect(jsonData).to.have.property(\"cidade\");",
+                  "    pm.expect(jsonData).to.have.property(\"pontuacao\");",
+                  "    pm.expect(jsonData).to.have.property(\"fotoURL\");",
+                  "    pm.expect(jsonData).to.have.property(\"sobremim\");",
+                  "    pm.expect(jsonData).to.have.property(\"notaAvaliacao\");",
+                  "    pm.expect(jsonData).to.have.property(\"totalAvaliacoes\");",
+                  "    pm.expect(jsonData).to.have.property(\"tutorId\");",
+                  "",
+                  "    // 2. Valida o tipo de dado de cada campo do usuário",
+                  "    pm.expect(jsonData.id).to.be.a(\"number\");",
+                  "    pm.expect(jsonData.nomePerfil).to.be.a(\"string\");",
+                  "    pm.expect(jsonData.estado).to.be.a(\"string\");",
+                  "    pm.expect(jsonData.cidade).to.be.a(\"string\");",
+                  "    pm.expect(jsonData.pontuacao).to.be.a(\"number\");",
+                  "    if (jsonData.fotoURL !== null) pm.expect(jsonData.fotoURL).to.be.a(\"string\");",
+                  "    if (jsonData.sobremim !== null) pm.expect(jsonData.sobremim).to.be.a(\"string\");",
+                  "    pm.expect(jsonData.notaAvaliacao).to.be.a(\"number\");",
+                  "    pm.expect(jsonData.totalAvaliacoes).to.be.a(\"number\");",
+                  "    pm.expect(jsonData.tutorId).to.be.a(\"number\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{WebTutoriaURL}}/usuarios/1",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "usuarios",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Altera Senha com Sucesso",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Valida se o status HTTP é 200 OK\npm.test(\"Status code é 200 OK\", function () {\n    pm.response.to.have.status(200);\n});\n\n// 2. Valida a mensagem de sucesso\npm.test(\"Retorna mensagem de confirmação de alteração de senha\", function () {\n    var jsonData = pm.response.json();\n    \n    var mensagem = jsonData.mensagem || jsonData.message;\n    pm.expect(mensagem).to.eql(\"Senha alterada com sucesso!\");\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"senhaAntiga\": \"admin123\",\r\n    \"senhaAtual\": \"admin123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/usuarios/altera-senha",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "usuarios",
+                "altera-senha"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Altera Senha com Erro",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// 1. Valida se o status HTTP é 400 Bad Request",
+                  "pm.test(\"Status code é 400 Bad Request\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "// 2. Valida a mensagem de erro do campo senhaAntiga",
+                  "pm.test(\"Retorna mensagem de erro para senha antiga incorreta\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    ",
+                  "    var mensagem = jsonData.senhaAntiga ? jsonData.senhaAntiga[0] : null;",
+                  "    ",
+                  "    pm.expect(mensagem).to.eql(\"A senha antiga esta incorreta.\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"senhaAntiga\": \"asdadasdasd\",\r\n    \"senhaAtual\": \"Admin@13456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/usuarios/altera-senha",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "usuarios",
+                "altera-senha"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Altera Senha com Erro em Senha Nova",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"senhaAntiga\": \"Admin@223456\",\r\n    \"senhaAtual\": \"admin123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/usuarios/altera-senha",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "usuarios",
+                "altera-senha"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Tutor",
+      "item": [
+        {
+          "name": "Cadastrar Tutor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Valida se o status é 201 Created\npm.test(\"Status code é 201 Created\", function () {\n    pm.response.to.have.status(201);\n});\n\n// Valida todos os campos retornados no contrato do novo Tutor\npm.test(\"Retorna a estrutura completa do novo Tutor criado\", function () {\n    var jsonData = pm.response.json();\n\n    pm.expect(jsonData).to.have.property(\"id\");\n    pm.expect(jsonData).to.have.property(\"usuarioId\");\n    pm.expect(jsonData).to.have.property(\"nomePerfil\");\n    pm.expect(jsonData).to.have.property(\"estado\");\n    pm.expect(jsonData).to.have.property(\"cidade\");\n    pm.expect(jsonData).to.have.property(\"localizacao\");\n    pm.expect(jsonData).to.have.property(\"distancia_km\");\n    pm.expect(jsonData).to.have.property(\"pontuacao\");\n    pm.expect(jsonData).to.have.property(\"fotoURL\");\n    pm.expect(jsonData).to.have.property(\"sobremim\");\n    pm.expect(jsonData).to.have.property(\"notaAvaliacao\");\n    pm.expect(jsonData).to.have.property(\"totalAvaliacoes\");\n    pm.expect(jsonData).to.have.property(\"especialidades\");\n    pm.expect(jsonData).to.have.property(\"areas\");\n\n    pm.expect(jsonData.id).to.be.a(\"number\");\n    pm.expect(jsonData.usuarioId).to.be.a(\"number\");\n    pm.expect(jsonData.nomePerfil).to.be.a(\"string\");\n    pm.expect(jsonData.notaAvaliacao).to.be.a(\"number\");\n    pm.expect(jsonData.totalAvaliacoes).to.be.a(\"number\");\n\n    pm.expect(jsonData.especialidades).to.be.an(\"array\");\n    pm.expect(jsonData.areas).to.be.an(\"array\");\n\n    if (jsonData.estado !== null) pm.expect(jsonData.estado).to.be.a(\"string\");\n    if (jsonData.cidade !== null) pm.expect(jsonData.cidade).to.be.a(\"string\");\n    if (jsonData.fotoURL !== null) pm.expect(jsonData.fotoURL).to.be.a(\"string\");\n    if (jsonData.sobremim !== null) pm.expect(jsonData.sobremim).to.be.a(\"string\");\n});\n\n// Valida a estrutura da geolocalização (objeto com latitude e longitude)\npm.test(\"Objeto de localização contém latitude e longitude válidos\", function () {\n    var jsonData = pm.response.json();\n\n    if (jsonData.localizacao !== null) {\n        pm.expect(jsonData.localizacao).to.be.an(\"object\");\n        pm.expect(jsonData.localizacao).to.have.property(\"longitude\");\n        pm.expect(jsonData.localizacao).to.have.property(\"latitude\");\n\n        pm.expect(jsonData.localizacao.longitude).to.be.a(\"number\");\n        pm.expect(jsonData.localizacao.latitude).to.be.a(\"number\");\n    }\n});"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const logout = eval(pm.collectionVariables.get(\"Logout\"));\r\nlogout();\r\n\r\nconst login = eval(pm.collectionVariables.get(\"Login\"));\r\nlogin(\"webapp.tutoria+teste27@gmail.com\", \"Senha@123456\");"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{WebTutoriaURL}}/tutores/",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "tutores",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cadastrar Tutor (Já cadastrado)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Valida o Status Code 400",
+                  "pm.test(\"Status code é 400 Bad Request\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "// Valida a mensagem exata de erro retornada",
+                  "pm.test(\"Retorna mensagem de credenciais inválidas\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.mensagem).to.eql(\"Este usuário já está cadastrado como tutor.\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{WebTutoriaURL}}/tutores/",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "tutores",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Tutores",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Valida se o status é 200 \n    pm.test(\"Status code é 200 OK\", function () {\n    pm.response.to.have.status(200);\n});\n\n// Valida o contrato do envelope de paginação do DRF\npm.test(\"A resposta possui o formato paginado do DRF\", function () {\n    var jsonData = pm.response.json();\n\n    pm.expect(jsonData).to.have.property(\"count\");\n    pm.expect(jsonData).to.have.property(\"results\");\n    pm.expect(jsonData.results).to.be.an(\"array\");\n    \n    // Valida a quantidade total cadastrada no banco (24 tutores)\n    pm.expect(jsonData.count).to.be.at.least(24);\n    pm.expect(jsonData.results.length).to.be.above(0);\n});\n\n// Valida a estrutura e contrato de um item da lista de tutores\npm.test(\"O objeto do tutor possui todas as propriedades e tipos corretos\", function () {\n    var jsonData = pm.response.json();\n    var tutor = jsonData.results[0];\n\n    pm.expect(tutor).to.have.property(\"id\");\n    pm.expect(tutor).to.have.property(\"usuarioId\");\n    pm.expect(tutor).to.have.property(\"nomePerfil\");\n    pm.expect(tutor).to.have.property(\"estado\");\n    pm.expect(tutor).to.have.property(\"cidade\");\n    pm.expect(tutor).to.have.property(\"localizacao\");\n    pm.expect(tutor).to.have.property(\"distancia_km\");\n    pm.expect(tutor).to.have.property(\"pontuacao\");\n    pm.expect(tutor).to.have.property(\"fotoURL\");\n    pm.expect(tutor).to.have.property(\"sobremim\");\n    pm.expect(tutor).to.have.property(\"notaAvaliacao\");\n    pm.expect(tutor).to.have.property(\"totalAvaliacoes\");\n    pm.expect(tutor).to.have.property(\"especialidades\");\n    pm.expect(tutor).to.have.property(\"areas\");\n\n    pm.expect(tutor.id).to.be.a(\"number\");\n    pm.expect(tutor.usuarioId).to.be.a(\"number\");\n    pm.expect(tutor.nomePerfil).to.be.a(\"string\");\n    pm.expect(tutor.notaAvaliacao).to.be.a(\"number\");\n    pm.expect(tutor.totalAvaliacoes).to.be.a(\"number\");\n    \n    pm.expect(tutor.especialidades).to.be.an(\"array\");\n    pm.expect(tutor.areas).to.be.an(\"array\");\n\n    if (tutor.estado !== null) pm.expect(tutor.estado).to.be.a(\"string\");\n    if (tutor.cidade !== null) pm.expect(tutor.cidade).to.be.a(\"string\");\n    if (tutor.distancia_km !== null) pm.expect(tutor.distancia_km).to.be.a(\"number\");\n    if (tutor.fotoURL !== null) pm.expect(tutor.fotoURL).to.be.a(\"string\");\n    if (tutor.sobremim !== null) pm.expect(tutor.sobremim).to.be.a(\"string\");\n});"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{WebTutoriaURL}}/tutores/",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "tutores",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Tutores com Filtro",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Valida se o status é 200 ",
+                  "    pm.test(\"Status code é 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Valida o contrato do envelope de paginação do DRF",
+                  "pm.test(\"A resposta possui o formato paginado do DRF\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    pm.expect(jsonData).to.have.property(\"count\");",
+                  "    pm.expect(jsonData).to.have.property(\"results\");",
+                  "    pm.expect(jsonData.results).to.be.an(\"array\");",
+                  "    ",
+                  "    // Valida a quantidade de tutores de acordo com o filtro (1 tutor)",
+                  "    pm.expect(jsonData.count).to.be.at.least(1);",
+                  "    pm.expect(jsonData.results.length).to.be.above(0);",
+                  "});",
+                  "",
+                  "// Valida a estrutura e contrato de um item da lista de tutores",
+                  "pm.test(\"O objeto do tutor possui todas as propriedades e tipos corretos\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var tutor = jsonData.results[0];",
+                  "",
+                  "    pm.expect(tutor).to.have.property(\"id\");",
+                  "    pm.expect(tutor).to.have.property(\"usuarioId\");",
+                  "    pm.expect(tutor).to.have.property(\"nomePerfil\");",
+                  "    pm.expect(tutor).to.have.property(\"estado\");",
+                  "    pm.expect(tutor).to.have.property(\"cidade\");",
+                  "    pm.expect(tutor).to.have.property(\"localizacao\");",
+                  "    pm.expect(tutor).to.have.property(\"distancia_km\");",
+                  "    pm.expect(tutor).to.have.property(\"pontuacao\");",
+                  "    pm.expect(tutor).to.have.property(\"fotoURL\");",
+                  "    pm.expect(tutor).to.have.property(\"sobremim\");",
+                  "    pm.expect(tutor).to.have.property(\"notaAvaliacao\");",
+                  "    pm.expect(tutor).to.have.property(\"totalAvaliacoes\");",
+                  "    pm.expect(tutor).to.have.property(\"especialidades\");",
+                  "    pm.expect(tutor).to.have.property(\"areas\");",
+                  "",
+                  "    pm.expect(tutor.id).to.be.a(\"number\");",
+                  "    pm.expect(tutor.usuarioId).to.be.a(\"number\");",
+                  "    pm.expect(tutor.nomePerfil).to.be.a(\"string\");",
+                  "    pm.expect(tutor.notaAvaliacao).to.be.a(\"number\");",
+                  "    pm.expect(tutor.totalAvaliacoes).to.be.a(\"number\");",
+                  "    ",
+                  "    pm.expect(tutor.especialidades).to.be.an(\"array\");",
+                  "    pm.expect(tutor.areas).to.be.an(\"array\");",
+                  "",
+                  "    if (tutor.estado !== null) pm.expect(tutor.estado).to.be.a(\"string\");",
+                  "    if (tutor.cidade !== null) pm.expect(tutor.cidade).to.be.a(\"string\");",
+                  "    if (tutor.distancia_km !== null) pm.expect(tutor.distancia_km).to.be.a(\"number\");",
+                  "    if (tutor.fotoURL !== null) pm.expect(tutor.fotoURL).to.be.a(\"string\");",
+                  "    if (tutor.sobremim !== null) pm.expect(tutor.sobremim).to.be.a(\"string\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{WebTutoriaURL}}/tutores/?page=1&area=5&especialidade=5&page_size=6",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "tutores",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "area",
+                  "value": "5"
+                },
+                {
+                  "key": "especialidade",
+                  "value": "5"
+                },
+                {
+                  "key": "page_size",
+                  "value": "6"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Tutor Único",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Valida se o status é 200 OK",
+                  "pm.test(\"Status code é 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Valida se o ID retornado bate com o ID requisitado no path",
+                  "pm.test(\"Retorna o tutor correspondente ao ID informado\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    ",
+                  "    // Obtém o último parâmetro da URL (o ID do tutor)",
+                  "    var pathSegments = pm.request.url.path;",
+                  "    var requestedId = parseInt(pathSegments[pathSegments.length - 1], 10);",
+                  "",
+                  "    // Se o parâmetro for um número válido, compara com o id do objeto",
+                  "    if (!isNaN(requestedId)) {",
+                  "        pm.expect(jsonData.id).to.eql(requestedId);",
+                  "    }",
+                  "});",
+                  "",
+                  "// Valida a estrutura completa e os tipos de dados do tutor",
+                  "pm.test(\"O objeto do tutor possui todas as propriedades e tipos corretos\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    pm.expect(jsonData).to.have.property(\"id\");",
+                  "    pm.expect(jsonData).to.have.property(\"usuarioId\");",
+                  "    pm.expect(jsonData).to.have.property(\"nomePerfil\");",
+                  "    pm.expect(jsonData).to.have.property(\"estado\");",
+                  "    pm.expect(jsonData).to.have.property(\"cidade\");",
+                  "    pm.expect(jsonData).to.have.property(\"localizacao\");",
+                  "    pm.expect(jsonData).to.have.property(\"distancia_km\");",
+                  "    pm.expect(jsonData).to.have.property(\"pontuacao\");",
+                  "    pm.expect(jsonData).to.have.property(\"fotoURL\");",
+                  "    pm.expect(jsonData).to.have.property(\"sobremim\");",
+                  "    pm.expect(jsonData).to.have.property(\"notaAvaliacao\");",
+                  "    pm.expect(jsonData).to.have.property(\"totalAvaliacoes\");",
+                  "    pm.expect(jsonData).to.have.property(\"especialidades\");",
+                  "    pm.expect(jsonData).to.have.property(\"areas\");",
+                  "",
+                  "    pm.expect(jsonData.id).to.be.a(\"number\");",
+                  "    pm.expect(jsonData.usuarioId).to.be.a(\"number\");",
+                  "    pm.expect(jsonData.nomePerfil).to.be.a(\"string\");",
+                  "    pm.expect(jsonData.notaAvaliacao).to.be.a(\"number\");",
+                  "    pm.expect(jsonData.totalAvaliacoes).to.be.a(\"number\");",
+                  "    ",
+                  "    pm.expect(jsonData.especialidades).to.be.an(\"array\");",
+                  "    pm.expect(jsonData.areas).to.be.an(\"array\");",
+                  "",
+                  "    if (jsonData.estado !== null) pm.expect(jsonData.estado).to.be.a(\"string\");",
+                  "    if (jsonData.cidade !== null) pm.expect(jsonData.cidade).to.be.a(\"string\");",
+                  "    if (jsonData.distancia_km !== null) pm.expect(jsonData.distancia_km).to.be.a(\"number\");",
+                  "    if (jsonData.fotoURL !== null) pm.expect(jsonData.fotoURL).to.be.a(\"string\");",
+                  "    if (jsonData.sobremim !== null) pm.expect(jsonData.sobremim).to.be.a(\"string\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{WebTutoriaURL}}/tutores/2/",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "tutores",
+                "2",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Areas",
+      "item": [
+        {
+          "name": "Lista Áreas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Valida se o status HTTP é 200 OK",
+                  "pm.test(\"Status code é 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Valida se o retorno é um Array e se a quantidade de áreas bate com o povoamento (25 áreas)",
+                  "pm.test(\"Retorna a quantidade correta de áreas cadastradas (25 áreas)\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    ",
+                  "    var lista = Array.isArray(jsonData) ? jsonData : jsonData.results;",
+                  "",
+                  "    pm.expect(lista).to.be.an(\"array\");",
+                  "    pm.expect(lista.length).to.eql(25);",
+                  "});",
+                  "",
+                  "// Valida a estrutura e os tipos de dados dos itens da lista",
+                  "pm.test(\"Os itens da lista possuem a estrutura de campos esperada\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var lista = Array.isArray(jsonData) ? jsonData : jsonData.results;",
+                  "    var primeiraArea = lista[0];",
+                  "",
+                  "    pm.expect(primeiraArea).to.have.property(\"id\");",
+                  "    pm.expect(primeiraArea).to.have.property(\"nomeArea\");",
+                  "",
+                  "    pm.expect(primeiraArea.id).to.be.a(\"number\");",
+                  "    pm.expect(primeiraArea.nomeArea).to.be.a(\"string\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/areas/",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "areas",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lista Área Específica",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Valida se o status HTTP é 200 OK",
+                  "pm.test(\"Status code é 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Valida a estrutura e os tipos de dados da área",
+                  "pm.test(\"A área possui a estrutura de campos esperada\", function () {",
+                  "    var primeiraArea = pm.response.json();",
+                  "",
+                  "    pm.expect(primeiraArea).to.have.property(\"id\");",
+                  "    pm.expect(primeiraArea).to.have.property(\"nomeArea\");",
+                  "",
+                  "    pm.expect(primeiraArea.id).to.be.a(\"number\");",
+                  "    pm.expect(primeiraArea.nomeArea).to.be.a(\"string\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/areas/1/",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "areas",
+                "1",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lista Vínculos de Área e Tutor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Valida se o status HTTP é 200 OK\npm.test(\"Status code é 200 OK\", function () {\n    pm.response.to.have.status(200);\n});\n\n//Valida se a resposta é um Array e se contém exatamente os 49 vínculos\npm.test(\"Retorna mais que 48 vínculos entre tutores e especialidades\", function () {\n    var jsonData = pm.response.json();\n    \n    // Trata se for array direto ou paginado com 'results'\n    var lista = Array.isArray(jsonData) ? jsonData : jsonData.results;\n    \n    pm.expect(lista).to.be.an(\"array\");\n    pm.expect(lista.length).to.above(48);\n});\n\n// Valida a estrutura e os tipos de dados\npm.test(\"Cada item do vínculo possui a estrutura e tipos esperados (id, especialidadeId, tutorId)\", function () {\n    var jsonData = pm.response.json();\n    var lista = Array.isArray(jsonData) ? jsonData : jsonData.results;\n    var primeiroItem = lista[0];\n\n    pm.expect(primeiroItem).to.have.property(\"id\");\n    pm.expect(primeiroItem).to.have.property(\"especialidadeId\");\n    pm.expect(primeiroItem).to.have.property(\"tutorId\");\n\n    pm.expect(primeiroItem.id).to.be.a(\"number\");\n    pm.expect(primeiroItem.especialidadeId).to.be.a(\"number\");\n    pm.expect(primeiroItem.tutorId).to.be.a(\"number\");\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{WebTutoriaURL}}/contem/",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "contem",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cria Vínculo de Área e Tutor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Valida se o status HTTP é 201 Created",
+                  "pm.test(\"Status code é 200 OK\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "// Valida a estrutura e os tipos de dados da resposta",
+                  "pm.test(\"A resposta possui a estrutura de campos esperada\", function () {",
+                  "    var response = pm.response.json();",
+                  "",
+                  "    pm.expect(response).to.have.property(\"id\");",
+                  "    pm.expect(response).to.have.property(\"especialidadeId\");",
+                  "    pm.expect(response).to.have.property(\"tutorId\");",
+                  "",
+                  "    pm.expect(response.id).to.be.a(\"number\");",
+                  "    pm.expect(response.especialidadeId).to.be.a(\"number\");",
+                  "    pm.expect(response.tutorId).to.be.a(\"number\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "especialidadeId",
+                  "value": "15",
+                  "type": "text"
+                },
+                {
+                  "key": "tutorId",
+                  "value": "1",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/contem/",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "contem",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lista Vínculos Específico",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Valida se o status HTTP é 200 OK\npm.test(\"Status code é 200 OK\", function () {\n    pm.response.to.have.status(200);\n});\n\n// Valida a estrutura e os tipos de dados da resposta\npm.test(\"A resposta possui a estrutura de campos esperada\", function () {\n    var response = pm.response.json();\n\n    pm.expect(response).to.have.property(\"id\");\n    pm.expect(response).to.have.property(\"especialidadeId\");\n    pm.expect(response).to.have.property(\"tutorId\");\n\n    pm.expect(response.id).to.be.a(\"number\");\n    pm.expect(response.especialidadeId).to.be.a(\"number\");\n    pm.expect(response.tutorId).to.be.a(\"number\");\n});"
+                ]
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "especialidadeId",
+                  "value": "15",
+                  "type": "text"
+                },
+                {
+                  "key": "tutorId",
+                  "value": "1",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/contem/15/",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "contem",
+                "15",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Apaga Vínculo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Valida se o status HTTP é 204 No Content\npm.test(\"Status code é 204 No Content\", function () {\n    pm.response.to.have.status(204);\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "especialidadeId",
+                  "value": "15",
+                  "type": "text"
+                },
+                {
+                  "key": "tutorId",
+                  "value": "1",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/contem/15/",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "contem",
+                "15",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lista Especialidades",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Valida se o status HTTP é 200 OK",
+                  "pm.test(\"Status code é 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Valida se a resposta é um Array e se contém exatamente 26 especialidades do Popula",
+                  "pm.test(\"Retorna exatamente 26 especialidades cadastradas no banco\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    ",
+                  "    var lista = Array.isArray(jsonData) ? jsonData : jsonData.results;",
+                  "    ",
+                  "    pm.expect(lista).to.be.an(\"array\");",
+                  "    pm.expect(lista.length).to.eql(26);",
+                  "});",
+                  "",
+                  "// Valida a response e os tipos dos atributos (id, nomeEspecialidade, areaId)",
+                  "pm.test(\"Cada especialidade possui a estrutura id, nomeEspecialidade e areaId\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var lista = Array.isArray(jsonData) ? jsonData : jsonData.results;",
+                  "    var primeiraEspecialidade = lista[0];",
+                  "",
+                  "    // Presença das propriedades",
+                  "    pm.expect(primeiraEspecialidade).to.have.property(\"id\");",
+                  "    pm.expect(primeiraEspecialidade).to.have.property(\"nomeEspecialidade\");",
+                  "    pm.expect(primeiraEspecialidade).to.have.property(\"areaId\");",
+                  "",
+                  "    // Validação dos tipos de dados",
+                  "    pm.expect(primeiraEspecialidade.id).to.be.a(\"number\");",
+                  "    pm.expect(primeiraEspecialidade.nomeEspecialidade).to.be.a(\"string\");",
+                  "    pm.expect(primeiraEspecialidade.areaId).to.be.a(\"number\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{WebTutoriaURL}}/especialidades/",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "especialidades",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lista Especialidades por Área",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "//Valida se o status HTTP é 200 OK",
+                  "pm.test(\"Status code é 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Valida se todos os itens retornados pertencem estritamente à área informada",
+                  "pm.test(\"Todas as especialidades retornadas pertencem à areaId = 2\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var lista = Array.isArray(jsonData) ? jsonData : jsonData.results;",
+                  "",
+                  "    pm.expect(lista).to.be.an(\"array\");",
+                  "    pm.expect(lista.length).to.be.above(0);",
+                  "",
+                  "    lista.forEach(function(especialidade) {",
+                  "        pm.expect(especialidade.areaId).to.eql(2);",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{WebTutoriaURL}}/especialidades/?area=2",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "especialidades",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "area",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lista Especialidade Específica",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Valida se o status HTTP é 200 OK",
+                  "pm.test(\"Status code é 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Valida a estrutura e os tipos de dados da resposta",
+                  "pm.test(\"A resposta possui a estrutura de campos esperada\", function () {",
+                  "    var response = pm.response.json();",
+                  "",
+                  "    pm.expect(response).to.have.property(\"id\");",
+                  "    pm.expect(response).to.have.property(\"nomeEspecialidade\");",
+                  "    pm.expect(response).to.have.property(\"areaId\");",
+                  "",
+                  "    pm.expect(response.id).to.be.a(\"number\");",
+                  "    pm.expect(response.nomeEspecialidade).to.be.a(\"string\");",
+                  "    pm.expect(response.areaId).to.be.a(\"number\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{WebTutoriaURL}}/especialidades/2",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "especialidades",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Solicitar Sessão",
+      "item": [
+        {
+          "name": "Listar Agendas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Valida se o status HTTP é 200 OK\npm.test(\"Status code é 200 OK\", function () {\n    pm.response.to.have.status(200);\n});\n\n// Valida se a resposta é um Array e se contém exatamente 26 horários do Popula\npm.test(\"Retorna exatamente 26 horários de agenda cadastrados no banco\", function () {\n    var jsonData = pm.response.json();\n    \n    var lista = Array.isArray(jsonData) ? jsonData : jsonData.results;\n    \n    pm.expect(lista).to.be.an(\"array\");\n    pm.expect(lista.length).to.eql(26);\n});\n\n// Valida o contrato e os tipos dos atributos de um item da agenda\npm.test(\"Cada item da agenda possui a estrutura id, horarioInicio, horarioFim, dia e tutorId\", function () {\n    var jsonData = pm.response.json();\n    var lista = Array.isArray(jsonData) ? jsonData : jsonData.results;\n    var primeiroSlot = lista[0];\n\n    pm.expect(primeiroSlot).to.have.property(\"id\");\n    pm.expect(primeiroSlot).to.have.property(\"horarioInicio\");\n    pm.expect(primeiroSlot).to.have.property(\"horarioFim\");\n    pm.expect(primeiroSlot).to.have.property(\"dia\");\n    pm.expect(primeiroSlot).to.have.property(\"tutorId\");\n\n    pm.expect(primeiroSlot.id).to.be.a(\"number\");\n    pm.expect(primeiroSlot.horarioInicio).to.be.a(\"string\");\n    pm.expect(primeiroSlot.horarioFim).to.be.a(\"string\");\n    pm.expect(primeiroSlot.dia).to.be.a(\"string\");\n    pm.expect(primeiroSlot.tutorId).to.be.a(\"number\");\n});"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const logout = eval(pm.collectionVariables.get(\"Logout\"));\r\nlogout();\r\n\r\nconst login = eval(pm.collectionVariables.get(\"Login\"));\r\nlogin(\"webapp.tutoria+teste01@gmail.com\", \"Senha@123456\");"
+                ]
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "{{email}}",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "nomePerfil",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "estado",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "cidade",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "aniversario",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "foto",
+                  "type": "file",
+                  "src": "/C:/Users/ro_di/OneDrive/Imagens/hamon.png",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/agendas",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "agendas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Agendas de Tutor Específico",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Valida se o status HTTP é 200 OK",
+                  "pm.test(\"Status code é 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Valida se o filtro retornou os 2 horários exatos do Tutor 1",
+                  "pm.test(\"Retorna exatamente os 2 horários cadastrados para o tutorId = 1\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var lista = Array.isArray(jsonData) ? jsonData : jsonData.results;",
+                  "",
+                  "    pm.expect(lista).to.be.an(\"array\");",
+                  "    pm.expect(lista.length).to.eql(2);",
+                  "",
+                  "    lista.forEach(function(slot) {",
+                  "        pm.expect(slot.tutorId).to.eql(1);",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "{{email}}",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "nomePerfil",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "estado",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "cidade",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "aniversario",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "foto",
+                  "type": "file",
+                  "src": "/C:/Users/ro_di/OneDrive/Imagens/hamon.png",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/agendas/?tutor=1",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "agendas",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "tutor",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Criação de Agenda",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Valida se o status HTTP é 201 Created",
+                  "pm.test(\"Status code é 201 Created\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "// Valida se a response do endpoint tem os campos e tipos de campos corretos",
+                  "pm.test(\"Valida os campos da response\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    pm.expect(jsonData).to.have.property(\"id\");",
+                  "    pm.expect(jsonData).to.have.property(\"horarioInicio\");",
+                  "    pm.expect(jsonData).to.have.property(\"horarioFim\");",
+                  "    pm.expect(jsonData).to.have.property(\"dia\");",
+                  "    pm.expect(jsonData).to.have.property(\"tutorId\");",
+                  "",
+                  "    pm.expect(jsonData.id).to.be.a(\"number\");",
+                  "    pm.expect(jsonData.horarioInicio).to.be.a(\"string\");",
+                  "    pm.expect(jsonData.horarioFim).to.be.a(\"string\");",
+                  "    pm.expect(jsonData.dia).to.be.a(\"string\");",
+                  "    pm.expect(jsonData.tutorId).to.be.a(\"number\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"horarioInicio\": \"11:00:00.000Z\",\r\n  \"horarioFim\": \"12:00:00.000Z\",\r\n  \"dia\": \"QUA\",\r\n  \"tutorId\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/agendas/",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "agendas",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Agenda Específica",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Valida se o status HTTP é 200 OK",
+                  "pm.test(\"Status code é 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Valida se a response tem os campos e tipos de campos corretos",
+                  "pm.test(\"Cada item da agenda possui a estrutura id, horarioInicio, horarioFim, dia e tutorId\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    pm.expect(jsonData).to.have.property(\"id\");",
+                  "    pm.expect(jsonData).to.have.property(\"horarioInicio\");",
+                  "    pm.expect(jsonData).to.have.property(\"horarioFim\");",
+                  "    pm.expect(jsonData).to.have.property(\"dia\");",
+                  "    pm.expect(jsonData).to.have.property(\"tutorId\");",
+                  "",
+                  "    pm.expect(jsonData.id).to.be.a(\"number\");",
+                  "    pm.expect(jsonData.horarioInicio).to.be.a(\"string\");",
+                  "    pm.expect(jsonData.horarioFim).to.be.a(\"string\");",
+                  "    pm.expect(jsonData.dia).to.be.a(\"string\");",
+                  "    pm.expect(jsonData.tutorId).to.be.a(\"number\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "{{email}}",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "nomePerfil",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "estado",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "cidade",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "aniversario",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "foto",
+                  "type": "file",
+                  "src": "/C:/Users/ro_di/OneDrive/Imagens/hamon.png",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/agendas/1/",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "agendas",
+                "1",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Deletar Agenda",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Valida se o status HTTP é 204 No Content\npm.test(\"Status code é 204 No Content\", function () {\n    pm.response.to.have.status(204);\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "{{email}}",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "nomePerfil",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "estado",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "cidade",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "aniversario",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "foto",
+                  "type": "file",
+                  "src": "/C:/Users/ro_di/OneDrive/Imagens/hamon.png",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/agendas/7",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "agendas",
+                "7"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Sessões",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Valida se o status HTTP é 200 OK",
+                  "pm.test(\"Status code é 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Valida a estrutura de paginação do DRF",
+                  "pm.test(\"A resposta possui a estrutura paginada do DRF\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    pm.expect(jsonData).to.have.property(\"count\");",
+                  "    pm.expect(jsonData).to.have.property(\"results\");",
+                  "    pm.expect(jsonData.results).to.be.an(\"array\");",
+                  "    ",
+                  "    pm.expect(jsonData.count).to.be.a(\"number\");",
+                  "});",
+                  "",
+                  "// Valida a estrutura completa dos campos de uma sessão (se houver resultados)",
+                  "pm.test(\"O objeto da sessão possui todas as propriedades e tipos corretos\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    ",
+                  "    if (jsonData.results.length > 0) {",
+                  "        var sessao = jsonData.results[0];",
+                  "",
+                  "        pm.expect(sessao).to.have.property(\"id\");",
+                  "        pm.expect(sessao).to.have.property(\"nomeArea\");",
+                  "        pm.expect(sessao).to.have.property(\"nomeEspecialidade\");",
+                  "        pm.expect(sessao).to.have.property(\"nomeUsuario\");",
+                  "        pm.expect(sessao).to.have.property(\"nomeTutor\");",
+                  "        pm.expect(sessao).to.have.property(\"fotoAprendizURL\");",
+                  "        pm.expect(sessao).to.have.property(\"fotoTutorURL\");",
+                  "        pm.expect(sessao).to.have.property(\"idUsuarioSessao\");",
+                  "        pm.expect(sessao).to.have.property(\"nota\");",
+                  "        pm.expect(sessao).to.have.property(\"quantidadeAvaliacoes\");",
+                  "        pm.expect(sessao).to.have.property(\"dataSessao\");",
+                  "        pm.expect(sessao).to.have.property(\"horarioInicio\");",
+                  "        pm.expect(sessao).to.have.property(\"horarioFim\");",
+                  "        pm.expect(sessao).to.have.property(\"usuarioId\");",
+                  "        pm.expect(sessao).to.have.property(\"tutorId\");",
+                  "        pm.expect(sessao).to.have.property(\"areaId\");",
+                  "        pm.expect(sessao).to.have.property(\"especialidadeId\");",
+                  "",
+                  "        pm.expect(sessao.id).to.be.a(\"number\");",
+                  "        pm.expect(sessao.usuarioId).to.be.a(\"number\");",
+                  "        pm.expect(sessao.tutorId).to.be.a(\"number\");",
+                  "        pm.expect(sessao.areaId).to.be.a(\"number\");",
+                  "        pm.expect(sessao.especialidadeId).to.be.a(\"number\");",
+                  "",
+                  "        pm.expect(sessao.nomeArea).to.be.a(\"string\");",
+                  "        pm.expect(sessao.nomeEspecialidade).to.be.a(\"string\");",
+                  "        pm.expect(sessao.dataSessao).to.be.a(\"string\");",
+                  "",
+                  "        if (sessao.fotoAprendizURL !== null) pm.expect(sessao.fotoAprendizURL).to.be.a(\"string\");",
+                  "        if (sessao.fotoTutorURL !== null) pm.expect(sessao.fotoTutorURL).to.be.a(\"string\");",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "{{email}}",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "nomePerfil",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "estado",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "cidade",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "aniversario",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "foto",
+                  "type": "file",
+                  "src": "/C:/Users/ro_di/OneDrive/Imagens/hamon.png",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/sessoes/",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "sessoes",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Sessões como Aprendiz",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Valida se o status HTTP é 200 OK",
+                  "pm.test(\"Status code é 200 OK no filtro por tipo\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Valida se o retorno é paginado e funcional com o parâmetro de query",
+                  "pm.test(\"Retorna lista paginada de sessões filtradas por papel\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(jsonData).to.have.property(\"results\");",
+                  "    pm.expect(jsonData.results).to.be.an(\"array\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "{{email}}",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "nomePerfil",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "estado",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "cidade",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "aniversario",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "foto",
+                  "type": "file",
+                  "src": "/C:/Users/ro_di/OneDrive/Imagens/hamon.png",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/sessoes/?tipo=aprendiz",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "sessoes",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "tipo",
+                  "value": "aprendiz"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Sessões como Tutor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Valida se o status HTTP é 200 OK",
+                  "pm.test(\"Status code é 200 OK no filtro por tipo\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Valida se o retorno é paginado e funcional com o parâmetro de query",
+                  "pm.test(\"Retorna lista paginada de sessões filtradas por papel\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(jsonData).to.have.property(\"results\");",
+                  "    pm.expect(jsonData.results).to.be.an(\"array\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "{{email}}",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "nomePerfil",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "estado",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "cidade",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "aniversario",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "foto",
+                  "type": "file",
+                  "src": "/C:/Users/ro_di/OneDrive/Imagens/hamon.png",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/sessoes/?tipo=tutor",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "sessoes",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "tipo",
+                  "value": "tutor"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lista Solicitações",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Valida se o status HTTP é 200 OK",
+                  "pm.test(\"Status code é 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Valida o envelope de paginação do DRF",
+                  "pm.test(\"A resposta possui a estrutura paginada do DRF\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    pm.expect(jsonData).to.have.property(\"count\");",
+                  "    pm.expect(jsonData).to.have.property(\"results\");",
+                  "    pm.expect(jsonData.results).to.be.an(\"array\");",
+                  "    ",
+                  "    pm.expect(jsonData.count).to.be.a(\"number\");",
+                  "});",
+                  "",
+                  "// Valida a estrutura e os tipos de dados da response",
+                  "pm.test(\"A response da solicitação contém todas as propriedades e tipos esperados\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    if (jsonData.results.length > 0) {",
+                  "        var solicitacao = jsonData.results[0];",
+                  "",
+                  "        pm.expect(solicitacao).to.have.property(\"id\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nomeArea\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nomeEspecialidade\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nomeUsuario\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nomeTutor\");",
+                  "        pm.expect(solicitacao).to.have.property(\"horarioInicio\");",
+                  "        pm.expect(solicitacao).to.have.property(\"horarioFim\");",
+                  "        pm.expect(solicitacao).to.have.property(\"fotoAprendizURL\");",
+                  "        pm.expect(solicitacao).to.have.property(\"fotoTutorURL\");",
+                  "        pm.expect(solicitacao).to.have.property(\"idUsuarioSolicitacao\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nota\");",
+                  "        pm.expect(solicitacao).to.have.property(\"quantidadeAvaliacoes\");",
+                  "        pm.expect(solicitacao).to.have.property(\"dataCriacao\");",
+                  "        pm.expect(solicitacao).to.have.property(\"dataPretendida\");",
+                  "        pm.expect(solicitacao).to.have.property(\"validade\");",
+                  "        pm.expect(solicitacao).to.have.property(\"recorrente\");",
+                  "        pm.expect(solicitacao).to.have.property(\"estado\");",
+                  "        pm.expect(solicitacao).to.have.property(\"agendaId\");",
+                  "        pm.expect(solicitacao).to.have.property(\"areaId\");",
+                  "        pm.expect(solicitacao).to.have.property(\"especialidadeId\");",
+                  "",
+                  "        pm.expect(solicitacao.id).to.be.a(\"number\");",
+                  "        pm.expect(solicitacao.agendaId).to.be.a(\"number\");",
+                  "        pm.expect(solicitacao.areaId).to.be.a(\"number\");",
+                  "        pm.expect(solicitacao.especialidadeId).to.be.a(\"number\");",
+                  "",
+                  "        pm.expect(solicitacao.nomeArea).to.be.a(\"string\");",
+                  "        pm.expect(solicitacao.nomeEspecialidade).to.be.a(\"string\");",
+                  "        pm.expect(solicitacao.estado).to.be.a(\"string\");",
+                  "        pm.expect(solicitacao.recorrente).to.be.a(\"boolean\");",
+                  "",
+                  "        if (solicitacao.fotoAprendizURL !== null) pm.expect(solicitacao.fotoAprendizURL).to.be.a(\"string\");",
+                  "        if (solicitacao.fotoTutorURL !== null) pm.expect(solicitacao.fotoTutorURL).to.be.a(\"string\");",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "{{email}}",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "nomePerfil",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "estado",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "cidade",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "aniversario",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "foto",
+                  "type": "file",
+                  "src": "/C:/Users/ro_di/OneDrive/Imagens/hamon.png",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/solicitacoes/",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "solicitacoes",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lista Solicitações como Aprendiz",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// 1. Valida se o status HTTP é 200 OK",
+                  "pm.test(\"Status code é 200 OK com filtro por tipo\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// 2. Valida se o retorno paginado funciona com o filtro ativo",
+                  "pm.test(\"Retorna lista de solicitações filtradas com sucesso\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property(\"results\");",
+                  "    pm.expect(jsonData.results).to.be.an(\"array\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "{{email}}",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "nomePerfil",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "estado",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "cidade",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "aniversario",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "foto",
+                  "type": "file",
+                  "src": "/C:/Users/ro_di/OneDrive/Imagens/hamon.png",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/solicitacoes/?tipo=aprendiz",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "solicitacoes",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "tipo",
+                  "value": "aprendiz"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lista Solicitações como Tutor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Valida se o status HTTP é 200 OK",
+                  "pm.test(\"Status code é 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Valida o envelope de paginação do DRF",
+                  "pm.test(\"A resposta possui a estrutura paginada do DRF\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    pm.expect(jsonData).to.have.property(\"count\");",
+                  "    pm.expect(jsonData).to.have.property(\"results\");",
+                  "    pm.expect(jsonData.results).to.be.an(\"array\");",
+                  "    ",
+                  "    pm.expect(jsonData.count).to.be.a(\"number\");",
+                  "});",
+                  "",
+                  "// Valida a estrutura e os tipos de dados da response",
+                  "pm.test(\"A response da solicitação contém todas as propriedades e tipos esperados\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    if (jsonData.results.length > 0) {",
+                  "        var solicitacao = jsonData.results[0];",
+                  "",
+                  "        pm.expect(solicitacao).to.have.property(\"id\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nomeArea\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nomeEspecialidade\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nomeUsuario\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nomeTutor\");",
+                  "        pm.expect(solicitacao).to.have.property(\"horarioInicio\");",
+                  "        pm.expect(solicitacao).to.have.property(\"horarioFim\");",
+                  "        pm.expect(solicitacao).to.have.property(\"fotoAprendizURL\");",
+                  "        pm.expect(solicitacao).to.have.property(\"fotoTutorURL\");",
+                  "        pm.expect(solicitacao).to.have.property(\"idUsuarioSolicitacao\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nota\");",
+                  "        pm.expect(solicitacao).to.have.property(\"quantidadeAvaliacoes\");",
+                  "        pm.expect(solicitacao).to.have.property(\"dataCriacao\");",
+                  "        pm.expect(solicitacao).to.have.property(\"dataPretendida\");",
+                  "        pm.expect(solicitacao).to.have.property(\"validade\");",
+                  "        pm.expect(solicitacao).to.have.property(\"recorrente\");",
+                  "        pm.expect(solicitacao).to.have.property(\"estado\");",
+                  "        pm.expect(solicitacao).to.have.property(\"agendaId\");",
+                  "        pm.expect(solicitacao).to.have.property(\"areaId\");",
+                  "        pm.expect(solicitacao).to.have.property(\"especialidadeId\");",
+                  "",
+                  "        pm.expect(solicitacao.id).to.be.a(\"number\");",
+                  "        pm.expect(solicitacao.agendaId).to.be.a(\"number\");",
+                  "        pm.expect(solicitacao.areaId).to.be.a(\"number\");",
+                  "        pm.expect(solicitacao.especialidadeId).to.be.a(\"number\");",
+                  "",
+                  "        pm.expect(solicitacao.nomeArea).to.be.a(\"string\");",
+                  "        pm.expect(solicitacao.nomeEspecialidade).to.be.a(\"string\");",
+                  "        pm.expect(solicitacao.estado).to.be.a(\"string\");",
+                  "        pm.expect(solicitacao.recorrente).to.be.a(\"boolean\");",
+                  "",
+                  "        if (solicitacao.fotoAprendizURL !== null) pm.expect(solicitacao.fotoAprendizURL).to.be.a(\"string\");",
+                  "        if (solicitacao.fotoTutorURL !== null) pm.expect(solicitacao.fotoTutorURL).to.be.a(\"string\");",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "{{email}}",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "nomePerfil",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "estado",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "cidade",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "aniversario",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "foto",
+                  "type": "file",
+                  "src": "/C:/Users/ro_di/OneDrive/Imagens/hamon.png",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/solicitacoes/?tipo=tutor",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "solicitacoes",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "tipo",
+                  "value": "tutor"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Criação de Solicitação",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Valida se o status HTTP é 201 Created",
+                  "pm.test(\"Status code é 201 Created\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "// Valida o contrato completo do objeto retornado",
+                  "pm.test(\"Retorna a estrutura completa da solicitação criada\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    pm.expect(jsonData).to.have.property(\"id\");",
+                  "    pm.expect(jsonData).to.have.property(\"nomeArea\");",
+                  "    pm.expect(jsonData).to.have.property(\"nomeEspecialidade\");",
+                  "    pm.expect(jsonData).to.have.property(\"nomeUsuario\");",
+                  "    pm.expect(jsonData).to.have.property(\"nomeTutor\");",
+                  "    pm.expect(jsonData).to.have.property(\"horarioInicio\");",
+                  "    pm.expect(jsonData).to.have.property(\"horarioFim\");",
+                  "    pm.expect(jsonData).to.have.property(\"fotoAprendizURL\");",
+                  "    pm.expect(jsonData).to.have.property(\"fotoTutorURL\");",
+                  "    pm.expect(jsonData).to.have.property(\"idUsuarioSolicitacao\");",
+                  "    pm.expect(jsonData).to.have.property(\"nota\");",
+                  "    pm.expect(jsonData).to.have.property(\"quantidadeAvaliacoes\");",
+                  "    pm.expect(jsonData).to.have.property(\"dataCriacao\");",
+                  "    pm.expect(jsonData).to.have.property(\"dataPretendida\");",
+                  "    pm.expect(jsonData).to.have.property(\"validade\");",
+                  "    pm.expect(jsonData).to.have.property(\"recorrente\");",
+                  "    pm.expect(jsonData).to.have.property(\"estado\");",
+                  "    pm.expect(jsonData).to.have.property(\"agendaId\");",
+                  "    pm.expect(jsonData).to.have.property(\"areaId\");",
+                  "    pm.expect(jsonData).to.have.property(\"especialidadeId\");",
+                  "",
+                  "    pm.expect(jsonData.id).to.be.a(\"number\");",
+                  "    pm.expect(jsonData.agendaId).to.be.a(\"number\");",
+                  "    pm.expect(jsonData.areaId).to.be.a(\"number\");",
+                  "    pm.expect(jsonData.especialidadeId).to.be.a(\"number\");",
+                  "    pm.expect(jsonData.recorrente).to.be.a(\"boolean\");",
+                  "    pm.expect(jsonData.estado).to.be.a(\"string\");",
+                  "",
+                  "    if (jsonData.fotoAprendizURL !== null) pm.expect(jsonData.fotoAprendizURL).to.be.a(\"string\");",
+                  "    if (jsonData.fotoTutorURL !== null) pm.expect(jsonData.fotoTutorURL).to.be.a(\"string\");",
+                  "});",
+                  "",
+                  "// Valida se a resposta corresponde aos dados enviados no Body",
+                  "pm.test(\"Os dados da resposta batem com os valores enviados na requisição\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    if (pm.request.body.raw) {",
+                  "        var requestBody = JSON.parse(pm.request.body.raw);",
+                  "",
+                  "        pm.expect(jsonData.agendaId).to.eql(requestBody.agendaId);",
+                  "        pm.expect(jsonData.areaId).to.eql(requestBody.areaId);",
+                  "        pm.expect(jsonData.especialidadeId).to.eql(requestBody.especialidadeId);",
+                  "        pm.expect(jsonData.dataPretendida).to.eql(requestBody.dataPretendida);",
+                  "        pm.expect(jsonData.recorrente).to.eql(requestBody.recorrente);",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"dataPretendida\": \"2026-10-27\",\r\n  \"recorrente\": false,\r\n  \"estado\": \"PENDENTE\",\r\n  \"agendaId\": 3,\r\n  \"areaId\": 2,\r\n  \"especialidadeId\": 2\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/solicitacoes/",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "solicitacoes",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lista Solicitação Específica",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Valida se o status HTTP é 200 OK\npm.test(\"Status code é 200 OK\", function () {\n    pm.response.to.have.status(200);\n});\n\n// Valida se o ID retornado corresponde ao ID solicitado na URL\npm.test(\"Retorna a solicitação correspondente ao ID da URL\", function () {\n    var jsonData = pm.response.json();\n    var pathSegments = pm.request.url.path;\n    var requestedId = parseInt(pathSegments[pathSegments.length - 1], 10);\n\n    if (!isNaN(requestedId)) {\n        pm.expect(jsonData.id).to.eql(requestedId);\n    }\n});\n\n// Valida a estrutura completa do objeto de solicitação\npm.test(\"O objeto da solicitação contém todas as propriedades e tipos esperados\", function () {\n    var jsonData = pm.response.json();\n\n    pm.expect(jsonData).to.have.property(\"id\");\n    pm.expect(jsonData).to.have.property(\"nomeArea\");\n    pm.expect(jsonData).to.have.property(\"nomeEspecialidade\");\n    pm.expect(jsonData).to.have.property(\"nomeUsuario\");\n    pm.expect(jsonData).to.have.property(\"nomeTutor\");\n    pm.expect(jsonData).to.have.property(\"horarioInicio\");\n    pm.expect(jsonData).to.have.property(\"horarioFim\");\n    pm.expect(jsonData).to.have.property(\"fotoAprendizURL\");\n    pm.expect(jsonData).to.have.property(\"fotoTutorURL\");\n    pm.expect(jsonData).to.have.property(\"idUsuarioSolicitacao\");\n    pm.expect(jsonData).to.have.property(\"nota\");\n    pm.expect(jsonData).to.have.property(\"quantidadeAvaliacoes\");\n    pm.expect(jsonData).to.have.property(\"dataCriacao\");\n    pm.expect(jsonData).to.have.property(\"dataPretendida\");\n    pm.expect(jsonData).to.have.property(\"validade\");\n    pm.expect(jsonData).to.have.property(\"recorrente\");\n    pm.expect(jsonData).to.have.property(\"estado\");\n    pm.expect(jsonData).to.have.property(\"agendaId\");\n    pm.expect(jsonData).to.have.property(\"areaId\");\n    pm.expect(jsonData).to.have.property(\"especialidadeId\");\n\n    pm.expect(jsonData.id).to.be.a(\"number\");\n    pm.expect(jsonData.agendaId).to.be.a(\"number\");\n    pm.expect(jsonData.areaId).to.be.a(\"number\");\n    pm.expect(jsonData.especialidadeId).to.be.a(\"number\");\n    pm.expect(jsonData.recorrente).to.be.a(\"boolean\");\n    pm.expect(jsonData.estado).to.be.a(\"string\");\n\n    if (jsonData.fotoAprendizURL !== null) pm.expect(jsonData.fotoAprendizURL).to.be.a(\"string\");\n    if (jsonData.fotoTutorURL !== null) pm.expect(jsonData.fotoTutorURL).to.be.a(\"string\");\n});"
+                ]
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "{{email}}",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "nomePerfil",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "estado",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "cidade",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "aniversario",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "foto",
+                  "type": "file",
+                  "src": "/C:/Users/ro_di/OneDrive/Imagens/hamon.png",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/solicitacoes/32/",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "solicitacoes",
+                "32",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Aceitar Solicitação",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Valida se o status HTTP é 200 OK",
+                  "pm.test(\"Status code é 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Valida se o estado da solicitação mudou para 'ACEITO'",
+                  "pm.test(\"O estado da solicitação foi alterado para ACEITO\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.estado).to.eql(\"ACEITO\");",
+                  "});",
+                  "",
+                  "// Valida a estrutura completa da response retornado",
+                  "pm.test(\"Retorna a estrutura completa da response da solicitação\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    // Presença de todas as propriedades da response",
+                  "    pm.expect(jsonData).to.have.property(\"id\");",
+                  "    pm.expect(jsonData).to.have.property(\"nomeArea\");",
+                  "    pm.expect(jsonData).to.have.property(\"nomeEspecialidade\");",
+                  "    pm.expect(jsonData).to.have.property(\"nomeUsuario\");",
+                  "    pm.expect(jsonData).to.have.property(\"nomeTutor\");",
+                  "    pm.expect(jsonData).to.have.property(\"horarioInicio\");",
+                  "    pm.expect(jsonData).to.have.property(\"horarioFim\");",
+                  "    pm.expect(jsonData).to.have.property(\"fotoAprendizURL\");",
+                  "    pm.expect(jsonData).to.have.property(\"fotoTutorURL\");",
+                  "    pm.expect(jsonData).to.have.property(\"idUsuarioSolicitacao\");",
+                  "    pm.expect(jsonData).to.have.property(\"nota\");",
+                  "    pm.expect(jsonData).to.have.property(\"quantidadeAvaliacoes\");",
+                  "    pm.expect(jsonData).to.have.property(\"dataCriacao\");",
+                  "    pm.expect(jsonData).to.have.property(\"dataPretendida\");",
+                  "    pm.expect(jsonData).to.have.property(\"validade\");",
+                  "    pm.expect(jsonData).to.have.property(\"recorrente\");",
+                  "    pm.expect(jsonData).to.have.property(\"estado\");",
+                  "    pm.expect(jsonData).to.have.property(\"agendaId\");",
+                  "    pm.expect(jsonData).to.have.property(\"areaId\");",
+                  "    pm.expect(jsonData).to.have.property(\"especialidadeId\");",
+                  "",
+                  "    // Validação de tipos essenciais",
+                  "    pm.expect(jsonData.id).to.be.a(\"number\");",
+                  "    pm.expect(jsonData.agendaId).to.be.a(\"number\");",
+                  "    pm.expect(jsonData.areaId).to.be.a(\"number\");",
+                  "    pm.expect(jsonData.especialidadeId).to.be.a(\"number\");",
+                  "    pm.expect(jsonData.recorrente).to.be.a(\"boolean\");",
+                  "",
+                  "    if (jsonData.fotoAprendizURL !== null) pm.expect(jsonData.fotoAprendizURL).to.be.a(\"string\");",
+                  "    if (jsonData.fotoTutorURL !== null) pm.expect(jsonData.fotoTutorURL).to.be.a(\"string\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "{{email}}",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "nomePerfil",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "estado",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "cidade",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "aniversario",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "foto",
+                  "type": "file",
+                  "src": "/C:/Users/ro_di/OneDrive/Imagens/hamon.png",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/solicitacoes/aceitar/32/",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "solicitacoes",
+                "aceitar",
+                "32",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Recusar Solicitação",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Valida se o status HTTP é 200 OK",
+                  "pm.test(\"Status code é 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Valida se o estado da solicitação mudou para 'RECUSADO'",
+                  "pm.test(\"O estado da solicitação foi alterado para RECUSADO\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.estado).to.eql(\"RECUSADO\");",
+                  "});",
+                  "",
+                  "// Valida a estrutura completa da response retornado",
+                  "pm.test(\"Retorna a estrutura completa da response da solicitação\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    // Presença de todas as propriedades da response",
+                  "    pm.expect(jsonData).to.have.property(\"id\");",
+                  "    pm.expect(jsonData).to.have.property(\"nomeArea\");",
+                  "    pm.expect(jsonData).to.have.property(\"nomeEspecialidade\");",
+                  "    pm.expect(jsonData).to.have.property(\"nomeUsuario\");",
+                  "    pm.expect(jsonData).to.have.property(\"nomeTutor\");",
+                  "    pm.expect(jsonData).to.have.property(\"horarioInicio\");",
+                  "    pm.expect(jsonData).to.have.property(\"horarioFim\");",
+                  "    pm.expect(jsonData).to.have.property(\"fotoAprendizURL\");",
+                  "    pm.expect(jsonData).to.have.property(\"fotoTutorURL\");",
+                  "    pm.expect(jsonData).to.have.property(\"idUsuarioSolicitacao\");",
+                  "    pm.expect(jsonData).to.have.property(\"nota\");",
+                  "    pm.expect(jsonData).to.have.property(\"quantidadeAvaliacoes\");",
+                  "    pm.expect(jsonData).to.have.property(\"dataCriacao\");",
+                  "    pm.expect(jsonData).to.have.property(\"dataPretendida\");",
+                  "    pm.expect(jsonData).to.have.property(\"validade\");",
+                  "    pm.expect(jsonData).to.have.property(\"recorrente\");",
+                  "    pm.expect(jsonData).to.have.property(\"estado\");",
+                  "    pm.expect(jsonData).to.have.property(\"agendaId\");",
+                  "    pm.expect(jsonData).to.have.property(\"areaId\");",
+                  "    pm.expect(jsonData).to.have.property(\"especialidadeId\");",
+                  "",
+                  "    // Validação de tipos essenciais",
+                  "    pm.expect(jsonData.id).to.be.a(\"number\");",
+                  "    pm.expect(jsonData.agendaId).to.be.a(\"number\");",
+                  "    pm.expect(jsonData.areaId).to.be.a(\"number\");",
+                  "    pm.expect(jsonData.especialidadeId).to.be.a(\"number\");",
+                  "    pm.expect(jsonData.recorrente).to.be.a(\"boolean\");",
+                  "",
+                  "    if (jsonData.fotoAprendizURL !== null) pm.expect(jsonData.fotoAprendizURL).to.be.a(\"string\");",
+                  "    if (jsonData.fotoTutorURL !== null) pm.expect(jsonData.fotoTutorURL).to.be.a(\"string\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "{{email}}",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "nomePerfil",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "estado",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "cidade",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "aniversario",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "foto",
+                  "type": "file",
+                  "src": "/C:/Users/ro_di/OneDrive/Imagens/hamon.png",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/solicitacoes/recusar/33/",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "solicitacoes",
+                "recusar",
+                "33",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lista Todas as Solicitações",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Valida se o status HTTP é 200 OK",
+                  "pm.test(\"Status code é 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Valida se o retorno é um Array direto (Sem Paginação)",
+                  "pm.test(\"A resposta é uma lista direta (Array) sem envelope de paginação\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    pm.expect(jsonData).to.be.an(\"array\");",
+                  "});",
+                  "",
+                  "// Valida a estrutura completa dos campos de uma solicitação",
+                  "pm.test(\"Os itens da lista contêm todas as propriedades e tipos esperados\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    if (jsonData.length > 0) {",
+                  "        var solicitacao = jsonData[0];",
+                  "",
+                  "        pm.expect(solicitacao).to.have.property(\"id\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nomeArea\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nomeEspecialidade\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nomeUsuario\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nomeTutor\");",
+                  "        pm.expect(solicitacao).to.have.property(\"horarioInicio\");",
+                  "        pm.expect(solicitacao).to.have.property(\"horarioFim\");",
+                  "        pm.expect(solicitacao).to.have.property(\"fotoAprendizURL\");",
+                  "        pm.expect(solicitacao).to.have.property(\"fotoTutorURL\");",
+                  "        pm.expect(solicitacao).to.have.property(\"idUsuarioSolicitacao\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nota\");",
+                  "        pm.expect(solicitacao).to.have.property(\"quantidadeAvaliacoes\");",
+                  "        pm.expect(solicitacao).to.have.property(\"dataCriacao\");",
+                  "        pm.expect(solicitacao).to.have.property(\"dataPretendida\");",
+                  "        pm.expect(solicitacao).to.have.property(\"validade\");",
+                  "        pm.expect(solicitacao).to.have.property(\"recorrente\");",
+                  "        pm.expect(solicitacao).to.have.property(\"estado\");",
+                  "        pm.expect(solicitacao).to.have.property(\"agendaId\");",
+                  "        pm.expect(solicitacao).to.have.property(\"areaId\");",
+                  "        pm.expect(solicitacao).to.have.property(\"especialidadeId\");",
+                  "",
+                  "        pm.expect(solicitacao.id).to.be.a(\"number\");",
+                  "        pm.expect(solicitacao.agendaId).to.be.a(\"number\");",
+                  "        pm.expect(solicitacao.areaId).to.be.a(\"number\");",
+                  "        pm.expect(solicitacao.especialidadeId).to.be.a(\"number\");",
+                  "        pm.expect(solicitacao.recorrente).to.be.a(\"boolean\");",
+                  "        pm.expect(solicitacao.estado).to.be.a(\"string\");",
+                  "",
+                  "        if (solicitacao.fotoAprendizURL !== null) pm.expect(solicitacao.fotoAprendizURL).to.be.a(\"string\");",
+                  "        if (solicitacao.fotoTutorURL !== null) pm.expect(solicitacao.fotoTutorURL).to.be.a(\"string\");",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/todas-solicitacoes/",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "todas-solicitacoes",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lista Todas as Solicitações como Tutor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Valida se o status HTTP é 200 OK",
+                  "pm.test(\"Status code é 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Valida se o retorno é um Array direto (Sem Paginação)",
+                  "pm.test(\"A resposta é uma lista direta (Array) sem envelope de paginação\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    pm.expect(jsonData).to.be.an(\"array\");",
+                  "});",
+                  "",
+                  "// Valida a estrutura completa dos campos de uma solicitação",
+                  "pm.test(\"Os itens da lista contêm todas as propriedades e tipos esperados\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    if (jsonData.length > 0) {",
+                  "        var solicitacao = jsonData[0];",
+                  "",
+                  "        pm.expect(solicitacao).to.have.property(\"id\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nomeArea\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nomeEspecialidade\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nomeUsuario\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nomeTutor\");",
+                  "        pm.expect(solicitacao).to.have.property(\"horarioInicio\");",
+                  "        pm.expect(solicitacao).to.have.property(\"horarioFim\");",
+                  "        pm.expect(solicitacao).to.have.property(\"fotoAprendizURL\");",
+                  "        pm.expect(solicitacao).to.have.property(\"fotoTutorURL\");",
+                  "        pm.expect(solicitacao).to.have.property(\"idUsuarioSolicitacao\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nota\");",
+                  "        pm.expect(solicitacao).to.have.property(\"quantidadeAvaliacoes\");",
+                  "        pm.expect(solicitacao).to.have.property(\"dataCriacao\");",
+                  "        pm.expect(solicitacao).to.have.property(\"dataPretendida\");",
+                  "        pm.expect(solicitacao).to.have.property(\"validade\");",
+                  "        pm.expect(solicitacao).to.have.property(\"recorrente\");",
+                  "        pm.expect(solicitacao).to.have.property(\"estado\");",
+                  "        pm.expect(solicitacao).to.have.property(\"agendaId\");",
+                  "        pm.expect(solicitacao).to.have.property(\"areaId\");",
+                  "        pm.expect(solicitacao).to.have.property(\"especialidadeId\");",
+                  "",
+                  "        pm.expect(solicitacao.id).to.be.a(\"number\");",
+                  "        pm.expect(solicitacao.agendaId).to.be.a(\"number\");",
+                  "        pm.expect(solicitacao.areaId).to.be.a(\"number\");",
+                  "        pm.expect(solicitacao.especialidadeId).to.be.a(\"number\");",
+                  "        pm.expect(solicitacao.recorrente).to.be.a(\"boolean\");",
+                  "        pm.expect(solicitacao.estado).to.be.a(\"string\");",
+                  "",
+                  "        if (solicitacao.fotoAprendizURL !== null) pm.expect(solicitacao.fotoAprendizURL).to.be.a(\"string\");",
+                  "        if (solicitacao.fotoTutorURL !== null) pm.expect(solicitacao.fotoTutorURL).to.be.a(\"string\");",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/todas-solicitacoes/?tipo=tutor",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "todas-solicitacoes",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "tipo",
+                  "value": "tutor"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lista Todas as Solicitações como Aprendiz",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Valida se o status HTTP é 200 OK",
+                  "pm.test(\"Status code é 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Valida se o retorno é um Array direto (Sem Paginação)",
+                  "pm.test(\"A resposta é uma lista direta (Array) sem envelope de paginação\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    pm.expect(jsonData).to.be.an(\"array\");",
+                  "});",
+                  "",
+                  "// Valida a estrutura completa dos campos de uma solicitação",
+                  "pm.test(\"Os itens da lista contêm todas as propriedades e tipos esperados\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    if (jsonData.length > 0) {",
+                  "        var solicitacao = jsonData[0];",
+                  "",
+                  "        pm.expect(solicitacao).to.have.property(\"id\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nomeArea\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nomeEspecialidade\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nomeUsuario\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nomeTutor\");",
+                  "        pm.expect(solicitacao).to.have.property(\"horarioInicio\");",
+                  "        pm.expect(solicitacao).to.have.property(\"horarioFim\");",
+                  "        pm.expect(solicitacao).to.have.property(\"fotoAprendizURL\");",
+                  "        pm.expect(solicitacao).to.have.property(\"fotoTutorURL\");",
+                  "        pm.expect(solicitacao).to.have.property(\"idUsuarioSolicitacao\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nota\");",
+                  "        pm.expect(solicitacao).to.have.property(\"quantidadeAvaliacoes\");",
+                  "        pm.expect(solicitacao).to.have.property(\"dataCriacao\");",
+                  "        pm.expect(solicitacao).to.have.property(\"dataPretendida\");",
+                  "        pm.expect(solicitacao).to.have.property(\"validade\");",
+                  "        pm.expect(solicitacao).to.have.property(\"recorrente\");",
+                  "        pm.expect(solicitacao).to.have.property(\"estado\");",
+                  "        pm.expect(solicitacao).to.have.property(\"agendaId\");",
+                  "        pm.expect(solicitacao).to.have.property(\"areaId\");",
+                  "        pm.expect(solicitacao).to.have.property(\"especialidadeId\");",
+                  "",
+                  "        pm.expect(solicitacao.id).to.be.a(\"number\");",
+                  "        pm.expect(solicitacao.agendaId).to.be.a(\"number\");",
+                  "        pm.expect(solicitacao.areaId).to.be.a(\"number\");",
+                  "        pm.expect(solicitacao.especialidadeId).to.be.a(\"number\");",
+                  "        pm.expect(solicitacao.recorrente).to.be.a(\"boolean\");",
+                  "        pm.expect(solicitacao.estado).to.be.a(\"string\");",
+                  "",
+                  "        if (solicitacao.fotoAprendizURL !== null) pm.expect(solicitacao.fotoAprendizURL).to.be.a(\"string\");",
+                  "        if (solicitacao.fotoTutorURL !== null) pm.expect(solicitacao.fotoTutorURL).to.be.a(\"string\");",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/todas-solicitacoes/?tipo=aprendiz",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "todas-solicitacoes",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "tipo",
+                  "value": "aprendiz"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lista Todas as Solicitações Pendentes",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Valida se o status HTTP é 200 OK",
+                  "pm.test(\"Status code é 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Valida se o retorno é um Array direto (Sem Paginação)",
+                  "pm.test(\"A resposta é uma lista direta (Array) sem envelope de paginação\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    pm.expect(jsonData).to.be.an(\"array\");",
+                  "});",
+                  "",
+                  "// Valida a estrutura completa dos campos de uma solicitação",
+                  "pm.test(\"Os itens da lista contêm todas as propriedades e tipos esperados\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    if (jsonData.length > 0) {",
+                  "        var solicitacao = jsonData[0];",
+                  "",
+                  "        pm.expect(solicitacao).to.have.property(\"id\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nomeArea\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nomeEspecialidade\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nomeUsuario\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nomeTutor\");",
+                  "        pm.expect(solicitacao).to.have.property(\"horarioInicio\");",
+                  "        pm.expect(solicitacao).to.have.property(\"horarioFim\");",
+                  "        pm.expect(solicitacao).to.have.property(\"fotoAprendizURL\");",
+                  "        pm.expect(solicitacao).to.have.property(\"fotoTutorURL\");",
+                  "        pm.expect(solicitacao).to.have.property(\"idUsuarioSolicitacao\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nota\");",
+                  "        pm.expect(solicitacao).to.have.property(\"quantidadeAvaliacoes\");",
+                  "        pm.expect(solicitacao).to.have.property(\"dataCriacao\");",
+                  "        pm.expect(solicitacao).to.have.property(\"dataPretendida\");",
+                  "        pm.expect(solicitacao).to.have.property(\"validade\");",
+                  "        pm.expect(solicitacao).to.have.property(\"recorrente\");",
+                  "        pm.expect(solicitacao).to.have.property(\"estado\");",
+                  "        pm.expect(solicitacao).to.have.property(\"agendaId\");",
+                  "        pm.expect(solicitacao).to.have.property(\"areaId\");",
+                  "        pm.expect(solicitacao).to.have.property(\"especialidadeId\");",
+                  "",
+                  "        pm.expect(solicitacao.id).to.be.a(\"number\");",
+                  "        pm.expect(solicitacao.agendaId).to.be.a(\"number\");",
+                  "        pm.expect(solicitacao.areaId).to.be.a(\"number\");",
+                  "        pm.expect(solicitacao.especialidadeId).to.be.a(\"number\");",
+                  "        pm.expect(solicitacao.recorrente).to.be.a(\"boolean\");",
+                  "        pm.expect(solicitacao.estado).to.be.a(\"string\");",
+                  "",
+                  "        if (solicitacao.fotoAprendizURL !== null) pm.expect(solicitacao.fotoAprendizURL).to.be.a(\"string\");",
+                  "        if (solicitacao.fotoTutorURL !== null) pm.expect(solicitacao.fotoTutorURL).to.be.a(\"string\");",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/todas-solicitacoes/?apenas_futura=true",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "todas-solicitacoes",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "apenas_futura",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lista Todas as Solicitações Resolvidas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Valida se o status HTTP é 200 OK",
+                  "pm.test(\"Status code é 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Valida se o retorno é um Array direto (Sem Paginação)",
+                  "pm.test(\"A resposta é uma lista direta (Array) sem envelope de paginação\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    pm.expect(jsonData).to.be.an(\"array\");",
+                  "});",
+                  "",
+                  "// Valida a estrutura completa dos campos de uma solicitação",
+                  "pm.test(\"Os itens da lista contêm todas as propriedades e tipos esperados\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    if (jsonData.length > 0) {",
+                  "        var solicitacao = jsonData[0];",
+                  "",
+                  "        pm.expect(solicitacao).to.have.property(\"id\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nomeArea\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nomeEspecialidade\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nomeUsuario\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nomeTutor\");",
+                  "        pm.expect(solicitacao).to.have.property(\"horarioInicio\");",
+                  "        pm.expect(solicitacao).to.have.property(\"horarioFim\");",
+                  "        pm.expect(solicitacao).to.have.property(\"fotoAprendizURL\");",
+                  "        pm.expect(solicitacao).to.have.property(\"fotoTutorURL\");",
+                  "        pm.expect(solicitacao).to.have.property(\"idUsuarioSolicitacao\");",
+                  "        pm.expect(solicitacao).to.have.property(\"nota\");",
+                  "        pm.expect(solicitacao).to.have.property(\"quantidadeAvaliacoes\");",
+                  "        pm.expect(solicitacao).to.have.property(\"dataCriacao\");",
+                  "        pm.expect(solicitacao).to.have.property(\"dataPretendida\");",
+                  "        pm.expect(solicitacao).to.have.property(\"validade\");",
+                  "        pm.expect(solicitacao).to.have.property(\"recorrente\");",
+                  "        pm.expect(solicitacao).to.have.property(\"estado\");",
+                  "        pm.expect(solicitacao).to.have.property(\"agendaId\");",
+                  "        pm.expect(solicitacao).to.have.property(\"areaId\");",
+                  "        pm.expect(solicitacao).to.have.property(\"especialidadeId\");",
+                  "",
+                  "        pm.expect(solicitacao.id).to.be.a(\"number\");",
+                  "        pm.expect(solicitacao.agendaId).to.be.a(\"number\");",
+                  "        pm.expect(solicitacao.areaId).to.be.a(\"number\");",
+                  "        pm.expect(solicitacao.especialidadeId).to.be.a(\"number\");",
+                  "        pm.expect(solicitacao.recorrente).to.be.a(\"boolean\");",
+                  "        pm.expect(solicitacao.estado).to.be.a(\"string\");",
+                  "",
+                  "        if (solicitacao.fotoAprendizURL !== null) pm.expect(solicitacao.fotoAprendizURL).to.be.a(\"string\");",
+                  "        if (solicitacao.fotoTutorURL !== null) pm.expect(solicitacao.fotoTutorURL).to.be.a(\"string\");",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/todas-solicitacoes/?apenas_resolvidas=true",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "todas-solicitacoes",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "apenas_resolvidas",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Sessão",
+      "item": [
+        {
+          "name": "Lista Todas as Sessões de um Tutor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Valida se o status HTTP é 200 OK",
+                  "pm.test(\"Status code é 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Valida se a resposta é um Array direto (sem envelope de paginação)",
+                  "pm.test(\"A resposta é um Array direto sem paginação\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    pm.expect(jsonData).to.be.an(\"array\");",
+                  "});",
+                  "",
+                  "// Valida a quantidade exata de sessões para o tutor_id=1 (6 sessões no Popula)",
+                  "pm.test(\"Retorna todas as 6 sessões associadas ao tutorId 1 (como tutor ou aprendiz)\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(jsonData.length).to.eql(6);",
+                  "});",
+                  "",
+                  "// Valida a estrutura e contrato dos objetos de sessão",
+                  "pm.test(\"Cada sessão possui a estrutura de campos e tipos esperados\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var primeiraSessao = jsonData[0];",
+                  "",
+                  "    pm.expect(primeiraSessao).to.have.property(\"id\");",
+                  "    pm.expect(primeiraSessao).to.have.property(\"nomeArea\");",
+                  "    pm.expect(primeiraSessao).to.have.property(\"nomeEspecialidade\");",
+                  "    pm.expect(primeiraSessao).to.have.property(\"nomeUsuario\");",
+                  "    pm.expect(primeiraSessao).to.have.property(\"nomeTutor\");",
+                  "    pm.expect(primeiraSessao).to.have.property(\"fotoAprendizURL\");",
+                  "    pm.expect(primeiraSessao).to.have.property(\"fotoTutorURL\");",
+                  "    pm.expect(primeiraSessao).to.have.property(\"dataSessao\");",
+                  "    pm.expect(primeiraSessao).to.have.property(\"horarioInicio\");",
+                  "    pm.expect(primeiraSessao).to.have.property(\"horarioFim\");",
+                  "    pm.expect(primeiraSessao).to.have.property(\"usuarioId\");",
+                  "    pm.expect(primeiraSessao).to.have.property(\"tutorId\");",
+                  "    pm.expect(primeiraSessao).to.have.property(\"areaId\");",
+                  "    pm.expect(primeiraSessao).to.have.property(\"especialidadeId\");",
+                  "",
+                  "    pm.expect(primeiraSessao.id).to.be.a(\"number\");",
+                  "    pm.expect(primeiraSessao.usuarioId).to.be.a(\"number\");",
+                  "    pm.expect(primeiraSessao.tutorId).to.be.a(\"number\");",
+                  "    pm.expect(primeiraSessao.areaId).to.be.a(\"number\");",
+                  "    pm.expect(primeiraSessao.especialidadeId).to.be.a(\"number\");",
+                  "",
+                  "    pm.expect(primeiraSessao.nomeArea).to.be.a(\"string\");",
+                  "    pm.expect(primeiraSessao.nomeEspecialidade).to.be.a(\"string\");",
+                  "    pm.expect(primeiraSessao.dataSessao).to.be.a(\"string\");",
+                  "",
+                  "    if (primeiraSessao.fotoAprendizURL !== null) pm.expect(primeiraSessao.fotoAprendizURL).to.be.a(\"string\");",
+                  "    if (primeiraSessao.fotoTutorURL !== null) pm.expect(primeiraSessao.fotoTutorURL).to.be.a(\"string\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{WebTutoriaURL}}/sessoes-tutor/?tutor_id=1",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "sessoes-tutor",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "tutor_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lista Todas as Sessões do Usuário",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Valida se o status HTTP é 200 OK",
+                  "pm.test(\"Status code é 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Valida se a resposta é um Array direto (sem envelope de paginação)",
+                  "pm.test(\"A resposta é um Array direto sem paginação\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    pm.expect(jsonData).to.be.an(\"array\");",
+                  "});",
+                  "",
+                  "// Valida a quantidade exata de sessões para o tutor_id=1 (6 sessões no Popula)",
+                  "pm.test(\"Retorna todas as 6 sessões associadas ao tutorId 1 (como tutor ou aprendiz)\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(jsonData.length).to.eql(6);",
+                  "});",
+                  "",
+                  "// Valida a estrutura e contrato dos objetos de sessão",
+                  "pm.test(\"Cada sessão possui a estrutura de campos e tipos esperados\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var primeiraSessao = jsonData[0];",
+                  "",
+                  "    pm.expect(primeiraSessao).to.have.property(\"id\");",
+                  "    pm.expect(primeiraSessao).to.have.property(\"nomeArea\");",
+                  "    pm.expect(primeiraSessao).to.have.property(\"nomeEspecialidade\");",
+                  "    pm.expect(primeiraSessao).to.have.property(\"nomeUsuario\");",
+                  "    pm.expect(primeiraSessao).to.have.property(\"nomeTutor\");",
+                  "    pm.expect(primeiraSessao).to.have.property(\"fotoAprendizURL\");",
+                  "    pm.expect(primeiraSessao).to.have.property(\"fotoTutorURL\");",
+                  "    pm.expect(primeiraSessao).to.have.property(\"dataSessao\");",
+                  "    pm.expect(primeiraSessao).to.have.property(\"horarioInicio\");",
+                  "    pm.expect(primeiraSessao).to.have.property(\"horarioFim\");",
+                  "    pm.expect(primeiraSessao).to.have.property(\"usuarioId\");",
+                  "    pm.expect(primeiraSessao).to.have.property(\"tutorId\");",
+                  "    pm.expect(primeiraSessao).to.have.property(\"areaId\");",
+                  "    pm.expect(primeiraSessao).to.have.property(\"especialidadeId\");",
+                  "",
+                  "    pm.expect(primeiraSessao.id).to.be.a(\"number\");",
+                  "    pm.expect(primeiraSessao.usuarioId).to.be.a(\"number\");",
+                  "    pm.expect(primeiraSessao.tutorId).to.be.a(\"number\");",
+                  "    pm.expect(primeiraSessao.areaId).to.be.a(\"number\");",
+                  "    pm.expect(primeiraSessao.especialidadeId).to.be.a(\"number\");",
+                  "",
+                  "    pm.expect(primeiraSessao.nomeArea).to.be.a(\"string\");",
+                  "    pm.expect(primeiraSessao.nomeEspecialidade).to.be.a(\"string\");",
+                  "    pm.expect(primeiraSessao.dataSessao).to.be.a(\"string\");",
+                  "",
+                  "    if (primeiraSessao.fotoAprendizURL !== null) pm.expect(primeiraSessao.fotoAprendizURL).to.be.a(\"string\");",
+                  "    if (primeiraSessao.fotoTutorURL !== null) pm.expect(primeiraSessao.fotoTutorURL).to.be.a(\"string\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{WebTutoriaURL}}/todas-sessoes-usuario/",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "todas-sessoes-usuario",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Avaliações",
+      "item": [
+        {
+          "name": "AvaliacoesPendentes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{WebTutoriaURL}}/avaliacoes/pendentes",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "avaliacoes",
+                "pendentes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Aprendiz",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Mensagens",
+      "item": [
+        {
+          "name": "Chats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "{{email}}",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "nomePerfil",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "estado",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "cidade",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "aniversario",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "foto",
+                  "type": "file",
+                  "src": [
+                    "/C:/Users/ro_di/OneDrive/Imagens/hamon.png"
+                  ],
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/chats/",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "chats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Chats",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{WebTutoriaURL}}/chats/",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "chats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Chats ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{WebTutoriaURL}}/chats/:id",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "chats",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "15"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mensagens",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "{{email}}",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "nomePerfil",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "estado",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "cidade",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "aniversario",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "foto",
+                  "type": "file",
+                  "src": [
+                    "/C:/Users/ro_di/OneDrive/Imagens/hamon.png"
+                  ],
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/mensagens/",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "mensagens",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mensagens ChatId",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{WebTutoriaURL}}/mensagens?chatId=11",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "mensagens"
+              ],
+              "query": [
+                {
+                  "key": "chatId",
+                  "value": "11"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mensagens",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "chatId",
+                  "value": "11",
+                  "type": "text"
+                },
+                {
+                  "key": "conteudo",
+                  "value": "{{$randomWords}}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/mensagens/",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "mensagens",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mensagens Marcar Lidas",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "chatId",
+                  "value": "11",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{WebTutoriaURL}}/mensagens/marcar-lidas/",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "mensagens",
+                "marcar-lidas",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Conquistas",
+      "item": []
+    },
+    {
+      "name": "Recomendações",
+      "item": [
+        {
+          "name": "Recomendacao Falha",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code é 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});\r\n\r\npm.test(\"Validar ser retornou mensagem\", function () {\r\n    const jsonData = pm.response.json();\r\n    pm.expect(jsonData).to.have.property('mensagem').that.is.an('string');\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{WebTutoriaURL}}/recomendacoes/",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "recomendacoes",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Recomendacao Sucesso",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Validar estrutura da resposta paginada\", function () {\r\n    const jsonData = pm.response.json();\r\n    pm.expect(jsonData).to.have.property('count');\r\n    pm.expect(jsonData).to.have.property('results').that.is.an('array');\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{WebTutoriaURL}}/recomendacoes/?area=2&especialidade=2&raio=1000&page=1&page_size=6",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "recomendacoes",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "area",
+                  "value": "2"
+                },
+                {
+                  "key": "especialidade",
+                  "value": "2"
+                },
+                {
+                  "key": "raio",
+                  "value": "1000"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "page_size",
+                  "value": "6"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Notificações",
+      "item": [
+        {
+          "name": "Notificacao",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Validar estrutura da resposta\", function () {\r\n    const jsonData = pm.response.json();\r\n    pm.expect(jsonData).to.have.property('mensagensNaoLidas');\r\n    pm.expect(jsonData).to.have.property('solicitacoesTutorPendentes');\r\n    pm.expect(jsonData).to.have.property('solicitacoesResolvidasAprendiz');\r\n    pm.expect(jsonData).to.have.property('solicitacoesResolvidasAprendiz').that.is.an('array');\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{WebTutoriaURL}}/notificacoes-resumo/",
+              "host": [
+                "{{WebTutoriaURL}}"
+              ],
+              "path": [
+                "notificacoes-resumo",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "exec": [
+          "pm.collectionVariables.set(\"Logout\", (() => {\r",
+          "    const config = {\r",
+          "        url: pm.variables.get(\"WebTutoriaURL\") + \"/logout\",\r",
+          "        method: \"POST\",\r",
+          "        header: { 'Content-Type': 'application/json' }\r",
+          "    }\r",
+          "    pm.sendRequest(config, function (err, response) {\r",
+          "        if (err) { console.error(err); return; }\r",
+          "        console.log(response.json());\r",
+          "    });\r",
+          "}).toString());\r",
+          "\r",
+          "\r",
+          "pm.collectionVariables.set(\"Login\", ((username=\"admin@tutoria.com\", password=\"admin123\") => {\r",
+          "    const config = {\r",
+          "        url: pm.variables.get(\"WebTutoriaURL\") + \"/login\",\r",
+          "        method: \"POST\",\r",
+          "        header: { 'Content-Type': 'application/json' },\r",
+          "        body: {\r",
+          "            mode: 'raw',\r",
+          "            raw: JSON.stringify({ username, password }),\r",
+          "            options: { raw: { language: 'json' } }\r",
+          "        }\r",
+          "    }\r",
+          "    pm.sendRequest(config, function (err, response) {\r",
+          "        if (err) { console.error(err); return; }\r",
+          "        const { mensagem } = response.json()\r",
+          "        if (mensagem == \"Login com sucesso\")\r",
+          "            console.log(`Logged as ${username}`);\r",
+          "    });\r",
+          "}).toString());"
+        ],
+        "type": "text/javascript"
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "WebTutoriaURL",
+      "value": "http://localhost:8000/v1"
+    },
+    {
+      "key": "email",
+      "value": ""
+    },
+    {
+      "key": "password",
+      "value": ""
+    },
+    {
+      "key": "novo_email",
+      "value": ""
+    },
+    {
+      "key": "nova_senha",
+      "value": ""
+    },
+    {
+      "key": "novo_nome",
+      "value": ""
+    },
+    {
+      "key": "novo_estado",
+      "value": ""
+    },
+    {
+      "key": "nova_cidade",
+      "value": ""
+    },
+    {
+      "key": "novo_aniversario",
+      "value": ""
+    },
+    {
+      "key": "Login",
+      "value": ""
+    },
+    {
+      "key": "Logout",
+      "value": ""
+    }
+  ]
+}
